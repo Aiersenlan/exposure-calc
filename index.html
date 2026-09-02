@@ -1,0 +1,587 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>曝險計算機 — 市場曝險 × 財務槓桿</title>
+<style>
+:root {
+  --bg:#fff; --panel:#f6f7f9; --panel-2:#eceef1; --text:#1a1c1f; --muted:#6b7280;
+  --line:#dcdfe4; --accent:#2563eb;
+  --buy:#d92b2b; --sell:#16a34a;
+  --warn:#b45309; --warn-bg:#fef3c7;
+  --ok:#15803d;  --ok-bg:#dcfce7;
+  --danger:#b91c1c; --danger-bg:#fee2e2;
+  --mk:#2563eb; --lv:#c2410c; --ex:#7c3aed;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg:#16181d; --panel:#1e2127; --panel-2:#262a32; --text:#e8eaed; --muted:#9aa1ab;
+    --line:#333842; --accent:#60a5fa;
+    --buy:#ff6b6b; --sell:#4ade80;
+    --warn:#fbbf24; --warn-bg:#3b2f14;
+    --ok:#4ade80;  --ok-bg:#14311f;
+    --danger:#fca5a5; --danger-bg:#3f1717;
+    --mk:#60a5fa; --lv:#fb923c; --ex:#a78bfa;
+  }
+}
+:root[data-theme="dark"] {
+  --bg:#16181d; --panel:#1e2127; --panel-2:#262a32; --text:#e8eaed; --muted:#9aa1ab;
+  --line:#333842; --accent:#60a5fa;
+  --buy:#ff6b6b; --sell:#4ade80;
+  --warn:#fbbf24; --warn-bg:#3b2f14;
+  --ok:#4ade80;  --ok-bg:#14311f;
+  --danger:#fca5a5; --danger-bg:#3f1717;
+  --mk:#60a5fa; --lv:#fb923c; --ex:#a78bfa;
+}
+* { box-sizing:border-box; }
+body { margin:0; padding:24px 16px 64px; background:var(--bg); color:var(--text);
+  font:15px/1.6 system-ui,-apple-system,"PingFang TC","Noto Sans TC","Microsoft JhengHei",sans-serif;
+  -webkit-text-size-adjust:100%; }
+.wrap { max-width:920px; margin:0 auto; }
+h1 { font-size:21px; margin:0 0 4px; letter-spacing:-.01em; }
+.sub { color:var(--muted); font-size:13px; margin:0 0 24px; }
+h2 { font-size:13px; text-transform:uppercase; letter-spacing:.06em; color:var(--muted);
+  margin:28px 0 10px; font-weight:600; }
+.card { background:var(--panel); border:1px solid var(--line); border-radius:10px; padding:16px; }
+.grid { display:grid; gap:14px; }
+.g3 { grid-template-columns:1fr 1fr 1fr; }
+.g2 { grid-template-columns:1fr 1fr; }
+@media (max-width:640px){ .g3,.g2 { grid-template-columns:1fr; } }
+label { display:block; font-size:12px; color:var(--muted); margin-bottom:4px; }
+input.numfield{ width:100%; padding:9px 10px; font-size:15px; font-variant-numeric:tabular-nums;
+  background:var(--bg); color:var(--text); border:1px solid var(--line); border-radius:7px; outline:none; }
+input.numfield:focus{ border-color:var(--accent); }
+.unit { font-size:11.5px; color:var(--muted); margin-top:3px; font-variant-numeric:tabular-nums; }
+
+.hero { display:grid; grid-template-columns:repeat(3,1fr); gap:1px; background:var(--line);
+  border:1px solid var(--line); border-radius:10px; overflow:hidden; }
+@media (max-width:640px){ .hero { grid-template-columns:1fr 1fr; } }
+.hero > div { background:var(--panel); padding:14px; }
+.hero .k { font-size:11px; color:var(--muted); letter-spacing:.04em; }
+.hero .k .en { display:block; font-size:9.5px; opacity:.75; text-transform:none; letter-spacing:0; margin-top:1px; }
+.hero .v { font-size:22px; font-weight:650; font-variant-numeric:tabular-nums; margin-top:2px; letter-spacing:-.02em; }
+.hero .n { font-size:11px; color:var(--muted); margin-top:2px; }
+.hero .v.danger { color:var(--danger); } .hero .v.warn { color:var(--warn); }
+.hero .v.mk { color:var(--mk); } .hero .v.lv { color:var(--lv); } .hero .v.ex { color:var(--ex); }
+.cx{color:var(--ex)}
+
+.eq { display:flex; align-items:center; justify-content:center; gap:14px; flex-wrap:wrap;
+  padding:16px 8px; font-variant-numeric:tabular-nums; }
+.eq .term { text-align:center; }
+.eq .term .t { font-size:11px; color:var(--muted); letter-spacing:.04em; }
+.eq .term .b { font-size:26px; font-weight:650; letter-spacing:-.02em; }
+.eq .term .s { font-size:11px; color:var(--muted); }
+.eq .op { font-size:20px; color:var(--muted); font-weight:300; padding-bottom:6px; }
+.eq .term.m .b { color:var(--mk); } .eq .term.g .b { color:var(--lv); }
+
+.tw { overflow-x:auto; -webkit-overflow-scrolling:touch; }
+table { width:100%; border-collapse:collapse; font-variant-numeric:tabular-nums; }
+th,td { padding:9px 8px; text-align:right; border-bottom:1px solid var(--line); font-size:14px; white-space:nowrap; }
+th { font-size:11px; color:var(--muted); font-weight:600; letter-spacing:.04em; text-transform:uppercase; }
+th:first-child, td:first-child { text-align:left; }
+tbody tr:last-child td { border-bottom:none; }
+tr.brk td { background:var(--danger-bg); }
+.buy{color:var(--buy);font-weight:600} .sell{color:var(--sell);font-weight:600} .flat{color:var(--muted)}
+.cm{color:var(--mk)} .cg{color:var(--lv)}
+
+.banner { border-radius:9px; padding:13px 15px; margin:14px 0 0; font-size:14px; border:1px solid transparent; }
+.banner.act { background:var(--warn-bg); color:var(--warn); border-color:currentColor; }
+.banner.hold { background:var(--ok-bg); color:var(--ok); border-color:currentColor; }
+.banner.bad { background:var(--danger-bg); color:var(--danger); border-color:currentColor; }
+.banner b { font-weight:700; }
+.banner + .banner { margin-top:8px; }
+
+.note { font-size:12.5px; color:var(--muted); margin-top:10px; line-height:1.65; }
+.note code { background:var(--panel-2); padding:1px 5px; border-radius:4px; font-size:12px; }
+.bar { height:22px; border-radius:5px; overflow:hidden; display:flex; margin-top:8px; background:var(--panel-2); }
+.bar span { display:block; font-size:10px; line-height:22px; text-align:center; color:#fff; white-space:nowrap; }
+.s-l{background:#7c3aed} .s-u{background:#2563eb} .s-c{background:#64748b}
+.legend { font-size:11px; color:var(--muted); margin-top:5px; display:flex; gap:14px; flex-wrap:wrap; }
+.legend i { display:inline-block; width:9px; height:9px; border-radius:2px; margin-right:4px; }
+.warnmsg { color:var(--warn); font-size:12.5px; margin-top:8px; }
+hr { border:none; border-top:1px solid var(--line); margin:32px 0 0; }
+
+details.gloss { background:var(--panel); border:1px solid var(--line); border-radius:10px; padding:2px 16px; margin-bottom:22px; }
+details.gloss summary { cursor:pointer; padding:14px 0; font-size:14px; font-weight:650; list-style:none; display:flex; align-items:center; gap:8px; }
+details.gloss summary::-webkit-details-marker { display:none; }
+details.gloss summary::before { content:"▸"; color:var(--muted); font-size:12px; transition:transform .15s; }
+details.gloss[open] summary::before { transform:rotate(90deg); }
+.gloss-body { padding:0 0 16px; display:grid; gap:14px; }
+.gloss-body .grp-t { font-size:11px; text-transform:uppercase; letter-spacing:.06em; color:var(--muted); font-weight:600; margin:6px 0 -2px; }
+.gterm { border-top:1px solid var(--line); padding-top:10px; }
+.gterm:first-of-type, .grp-t + .gterm { border-top:none; padding-top:0; }
+.gterm .zh { font-weight:650; font-size:13.5px; }
+.gterm .en { color:var(--accent); font-weight:500; font-size:12.5px; }
+.gterm .sym { color:var(--muted); font-size:12.5px; }
+.gterm p { margin:3px 0 0; font-size:13px; color:var(--text); line-height:1.6; }
+.gterm p .muted { color:var(--muted); }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<h1>曝險計算機</h1>
+<p class="sub">市場曝險 (Market Exposure) × 財務槓桿 (Financial Leverage) ‧ 正二 + 大盤 + 現金 + 信貸 + 質押 ‧ 定期檢驗與再平衡 (Rebalance)</p>
+
+<h2>市值 <span style="font-weight:400;color:var(--muted);font-size:11px">Market Value</span></h2>
+<div class="card">
+  <div class="grid g3">
+    <div><label>大盤正二 ETF 市值（萬元）<br><span style="opacity:.7">2x Leveraged ETF</span></label><input type="text" inputmode="text" autocomplete="off" class="numfield" id="valL" value="60"><div class="unit" id="uL"></div></div>
+    <div><label>大盤 ETF 市值（萬元）<br><span style="opacity:.7">Market ETF</span></label><input type="text" inputmode="text" autocomplete="off" class="numfield" id="valU" value="20"><div class="unit" id="uU"></div></div>
+    <div><label>現金（萬元）<br><span style="opacity:.7">Cash</span></label><input type="text" inputmode="text" autocomplete="off" class="numfield" id="cash" value="120"><div class="unit" id="uC"></div></div>
+  </div>
+  <div class="note">
+    填<b>目前市值</b>，不是投入成本 —— 曝險完全由市值決定，成本價不進任何公式。
+    台股沒有資本利得稅，再平衡賣出也沒有稅務考量。配息入帳後直接加進現金。
+  </div>
+</div>
+
+<h2>負債 <span style="font-weight:400;color:var(--muted);font-size:11px">Liabilities</span></h2>
+<div class="card">
+  <div class="grid g2">
+    <div><label>信貸 餘額（萬元）<br><span style="opacity:.7">Unsecured Loan (P)</span></label><input type="text" inputmode="text" autocomplete="off" class="numfield" id="loanP" value="100"><div class="unit" id="uP"></div></div>
+    <div><label>質押借款 餘額（萬元）<br><span style="opacity:.7">Pledged Loan (Q)</span></label><input type="text" inputmode="text" autocomplete="off" class="numfield" id="loanQ" value="20"><div class="unit" id="uQ"></div></div>
+  </div>
+  <div class="note">
+    只需要<b>餘額</b>。利率與利息不進槓桿公式 —— 曝險是資產負債表的快照，利息是現金流項目。
+    利息從投資現金付會讓 C 下降（g、m 微升），從薪資付則完全不動；兩者都在你下季重填數字時自動反映。
+  </div>
+</div>
+
+<h2>目標政策 <span style="font-weight:400;color:var(--muted);font-size:11px">Target Policy</span></h2>
+<div class="card">
+  <div class="grid g3">
+    <div><label>目標股票組合曝險 E*（%）<br><span style="opacity:.7">Target Stock Portfolio Exposure</span></label><input type="text" inputmode="text" autocomplete="off" class="numfield" id="eStar" value="180"></div>
+    <div><label>現金緩衝 b（% of 淨值）<br><span style="opacity:.7">Cash Buffer</span></label><input type="text" inputmode="text" autocomplete="off" class="numfield" id="bBuf" value="15"></div>
+    <div><label>再平衡門檻（百分點）<br><span style="opacity:.7">Rebalance Band</span></label><input type="text" inputmode="text" autocomplete="off" class="numfield" id="band" value="15"></div>
+  </div>
+  <div id="clampWarn" class="warnmsg" hidden></div>
+  <div class="note">
+    目標以<b>股票組合曝險 E</b> 設定（淨值層級，決定你的實際波動）。負債固定時，隱含的目標市場曝險 <code>m* = E* / g</code>。
+    目標配置：正二 <code>= E* − g + b</code>、大盤 <code>= 2g − E* − 2b</code>、現金 <code>= b</code>。可達上限 <code>E ≤ 2g</code>。
+  </div>
+</div>
+
+<h2>曝險 <span style="font-weight:400;color:var(--muted);font-size:11px">Exposure</span></h2>
+<div class="hero">
+  <div><div class="k">總資產 A<span class="en">Total Assets</span></div><div class="v" id="oA">—</div><div class="n" id="oAN"></div></div>
+  <div><div class="k">淨值 NAV<span class="en">Net Asset Value</span></div><div class="v" id="oNav">—</div><div class="n" id="oNavN"></div></div>
+  <div><div class="k">股票曝險金額<span class="en">Stock Exposure Amount</span></div><div class="v ex" id="oExp">—</div><div class="n" id="oExpN"></div></div>
+  <div><div class="k">市場曝險 m<span class="en">Market Exposure</span></div><div class="v mk" id="oM">—</div><div class="n" id="oMN"></div></div>
+  <div><div class="k">財務槓桿 g<span class="en">Financial Leverage</span></div><div class="v lv" id="oG">—</div><div class="n" id="oGN"></div></div>
+  <div><div class="k">股票組合曝險 E<span class="en">Stock Portfolio Exposure</span></div><div class="v" id="oE">—</div><div class="n" id="oEN"></div></div>
+</div>
+
+<div class="card" style="margin-top:14px">
+  <div class="eq">
+    <div class="term m"><div class="t">市場曝險 m<br><span style="opacity:.75">Market Exposure</span></div><div class="b" id="eqM">—</div><div class="s" id="eqMS"></div></div>
+    <div class="op">×</div>
+    <div class="term g"><div class="t">財務槓桿 g<br><span style="opacity:.75">Financial Leverage</span></div><div class="b" id="eqG">—</div><div class="s" id="eqGS"></div></div>
+    <div class="op">=</div>
+    <div class="term"><div class="t">股票組合曝險 E<br><span style="opacity:.75">Stock Portfolio Exposure</span></div><div class="b" id="eqE">—</div><div class="s" id="eqES"></div></div>
+  </div>
+  <div class="tw"><table>
+    <thead><tr><th>項目</th><th>市值</th><th>曝險權重</th><th>曝險金額</th><th>貢獻 m</th><th>貢獻 E</th></tr></thead>
+    <tbody id="decomp"></tbody>
+  </table></div>
+  <div class="note">
+    <b>m</b> 是資產側：每 100 元資產有多少在承受市場波動。現金拉低它、正二拉高它，上限 200%。<br>
+    <b>g</b> 是負債側：借款把部位放大幾倍。無負債 = 1.00。<br>
+    <b>E</b> 才是你真正承受的：大盤漲跌 1%，淨值變動 E%。大盤跌 <span id="ruinPct">—</span> 淨值歸零。
+  </div>
+</div>
+
+<div id="bannerRisk"></div>
+<div id="banner" class="banner hold"></div>
+
+<h2>資產負債表 <span style="font-weight:400;color:var(--muted);font-size:11px">Balance Sheet</span></h2>
+<div class="card"><div class="tw">
+  <table>
+    <thead><tr><th>項目</th><th>金額</th><th>佔總資產</th><th>佔淨值</th></tr></thead>
+    <tbody id="bs"></tbody>
+  </table>
+</div></div>
+
+<h2>配置 <span style="font-weight:400;color:var(--muted);font-size:11px">Allocation</span></h2>
+<div class="card">
+  <div style="font-size:12px;color:var(--muted)">目前（佔淨值，有負債時總和 &gt; 100%）</div>
+  <div class="bar" id="barNow"></div>
+  <div style="font-size:12px;color:var(--muted);margin-top:14px">目標</div>
+  <div class="bar" id="barTgt"></div>
+  <div class="legend"><span><i class="s-l"></i>正二</span><span><i class="s-u"></i>大盤</span><span><i class="s-c"></i>現金</span></div>
+</div>
+
+<h2>再平衡動作 <span style="font-weight:400;color:var(--muted);font-size:11px">Rebalance Actions</span></h2>
+<div class="card"><div class="tw">
+  <table>
+    <thead><tr><th>標的</th><th>目前</th><th>目標</th><th>差額</th><th>動作</th></tr></thead>
+    <tbody id="trades"></tbody>
+  </table>
+</div><div class="note" id="costNote"></div></div>
+
+<h2>情境模擬 <span style="font-weight:400;color:var(--muted);font-size:11px">Scenario Simulation</span></h2>
+<div class="card"><div class="tw">
+  <table>
+    <thead><tr><th>大盤變動</th><th>正二</th><th>大盤</th><th class="cx">曝險金額</th><th>總資產</th><th>淨值</th><th>淨值報酬</th><th class="cm">m</th><th class="cg">g</th><th>E</th></tr></thead>
+    <tbody id="scen"></tbody>
+  </table>
+</div>
+  <div class="note">
+    紅底 = 淨值歸零或轉負。注意 <span class="cm"><b>m</b></span> 和 <span class="cg"><b>g</b></span> 的漂移方向<b>相反</b>：
+    下跌時 m 自動下降（正二的保護），g 卻急速上升（負債不變、淨值縮水）。E 由誰佔上風決定。<br>
+    未計入正二的波動耗損（台灣50 σ ≈ 18–22%，年化耗損量級 <code>σ²</code> ≈ 3–5%，按正二比重打折）。
+  </div>
+</div>
+
+<h2>再平衡後：下次觸發點 <span style="font-weight:400;color:var(--muted);font-size:11px">Next Trigger Point</span></h2>
+<div class="card"><div class="tw">
+  <table>
+    <thead><tr><th>方向</th><th>大盤需變動</th><th>屆時 E</th><th>屆時淨值變動</th></tr></thead>
+    <tbody id="triggers"></tbody>
+  </table>
+</div>
+  <div class="note">
+    公式 <code>r = δ / (D − δ·E)</code>，漂移敏感度 <code>D = E + 2l − E²</code>（l = 正二 / 淨值）。
+    負債不隨市場波動，所以 <code>NAV′ = NAV × (1 + E·r)</code> 精確成立。
+    <b>D 為正</b> = 跌時自動去槓桿（正二主導，安全）；<b>D 為負</b> = 跌時槓桿放大（負債主導，危險）。
+  </div>
+</div>
+
+<hr>
+<div class="note" style="margin-top:16px">
+  <b>兩種曝險別混用。</b>
+  只看 m 會低估風險（忽略負債）；只看 E 會看不出風險來自哪一側。
+  想降低 E，你有兩個獨立的旋鈕：降 m（賣正二換大盤、或提高現金）或降 g（還款）。
+  崩盤時 g 會自己往上跑，這時唯一能主動壓的是 m。<br><br>
+  <b>本表刻意沒算的事</b>（與曝險比例正交，但真實存在）：質押的維持率與追繳／斷頭；
+  信貸的聯徵 DBR 22 倍規範與到期轉貸；利息對淨值的長期侵蝕。<br><br>
+  <b>使用方式</b>：每季打開一次，更新三個市值與兩筆餘額。E 沒超出門檻就什麼都不做 ——
+  檢查用日曆，動作用帶狀。實際下單時把差額除以現價換算張數，不足一張走零股。
+</div>
+
+<details class="gloss">
+<summary>新手看這裡：名詞解釋（中文／English／符號）</summary>
+<div class="gloss-body">
+
+  <div class="grp-t">資產與負債 · Balance Sheet</div>
+  <div class="gterm"><span class="zh">市值</span> <span class="en">Market Value</span>
+    <p>資產「現在」值多少錢，不是你當初買進的成本。<span class="muted">曝險完全由市值決定，成本價不影響任何計算。</span></p></div>
+  <div class="gterm"><span class="zh">正二 ETF</span> <span class="en">2x Leveraged ETF</span>
+    <p>追蹤指數「兩倍」漲跌幅的 ETF（例：台灣50正2）。大盤漲跌 1%，它大約漲跌 2%。</p></div>
+  <div class="gterm"><span class="zh">大盤 ETF</span> <span class="en">Market / Index ETF</span>
+    <p>追蹤大盤指數本身、不放大波動的 ETF（例：0050）。大盤漲跌 1%，它也漲跌約 1%。</p></div>
+  <div class="gterm"><span class="zh">現金</span> <span class="en">Cash</span> <span class="sym">(C)</span>
+    <p>還沒投入市場、不會因為大盤漲跌而變動的部位。</p></div>
+  <div class="gterm"><span class="zh">信貸</span> <span class="en">Unsecured / Personal Loan</span> <span class="sym">(P)</span>
+    <p>沒有拿股票或 ETF 抵押的貸款，銀行純憑個人信用核貸。</p></div>
+  <div class="gterm"><span class="zh">質押借款</span> <span class="en">Securities-backed / Pledged Loan</span> <span class="sym">(Q)</span>
+    <p>拿手上的股票或 ETF 去抵押借出的錢。<span class="muted">有「維持率」風險（見下）。</span></p></div>
+  <div class="gterm"><span class="zh">總資產</span> <span class="en">Total Assets</span> <span class="sym">(A)</span>
+    <p>你名下所有資產市值加總：<code>A = 正二 + 大盤 + 現金</code>。</p></div>
+  <div class="gterm"><span class="zh">淨值</span> <span class="en">Net Asset Value</span> <span class="sym">(NAV)</span>
+    <p>資產扣掉負債後，真正屬於你的錢：<code>NAV = A − 負債</code>。也常叫 <span class="en">Net Worth（身家）</span>。</p></div>
+
+  <div class="grp-t">曝險三指標 · Exposure Metrics</div>
+  <div class="gterm"><span class="zh">曝險金額</span> <span class="en">Exposure Amount</span>
+    <p>換算成「大盤漲跌 1% 時，你的資產會變動多少錢」的等效金額。正二部位波動是大盤的兩倍，所以要乘以 2 計算：<code>2×正二 + 大盤</code>。</p></div>
+  <div class="gterm"><span class="zh">市場曝險</span> <span class="en">Market Exposure</span> <span class="sym">(m)</span>
+    <p>每 100 元「資產」中有多少元在承受市場波動，是<b>資產面</b>的角度。現金拉低它、正二拉高它，理論上限 200%。</p></div>
+  <div class="gterm"><span class="zh">財務槓桿</span> <span class="en">Financial Leverage</span> <span class="sym">(g)</span>
+    <p>總資產是淨值的幾倍，反映負債把部位放大了多少倍，是<b>負債面</b>的角度。<code>g = 1.00</code> 代表完全沒借錢。</p></div>
+  <div class="gterm"><span class="zh">股票組合曝險</span> <span class="en">Stock Portfolio Exposure</span> <span class="sym">(E = m × g)</span>
+    <p>你的淨值「實際」承受的波動幅度 —— 大盤漲跌 1%，淨值大約變動 E%。<b>三個指標中最終該看的是這個。</b></p></div>
+
+  <div class="grp-t">目標與再平衡 · Target &amp; Rebalancing</div>
+  <div class="gterm"><span class="zh">目標股票組合曝險</span> <span class="en">Target Stock Portfolio Exposure</span> <span class="sym">(E*)</span>
+    <p>你設定、長期想維持的曝險水位，依自己能承受的波動程度決定，不是算出來的，是你選的。</p></div>
+  <div class="gterm"><span class="zh">現金緩衝</span> <span class="en">Cash Buffer</span> <span class="sym">(b)</span>
+    <p>刻意保留、不投入市場的現金比例，用來緩衝下跌時的壓力，避免被迫追繳或斷頭。</p></div>
+  <div class="gterm"><span class="zh">再平衡</span> <span class="en">Rebalance</span>
+    <p>把實際配置調整回目標配置的動作（買進或賣出部分部位）。</p></div>
+  <div class="gterm"><span class="zh">再平衡門檻</span> <span class="en">Rebalance Band / Threshold</span>
+    <p>曝險偏離目標「多少百分點」才值得真的動手調整，避免每次小波動都要交易、增加成本。</p></div>
+  <div class="gterm"><span class="zh">漂移敏感度</span> <span class="en">Drift Sensitivity</span> <span class="sym">(D)</span>
+    <p>大盤變動 1% 時，E 會自動往哪個方向、多快移動。<b>D 為正</b> = 下跌時曝險自動下降（正二保護你，較安全）；<b>D 為負</b> = 下跌時曝險自動上升（負債主導，較危險，需要主動處理）。</p></div>
+
+  <div class="grp-t">本表沒算、但你該知道的風險 · Not Modeled</div>
+  <div class="gterm"><span class="zh">維持率</span> <span class="en">Maintenance Ratio</span>
+    <p>質押借款常見的風控指標：<code>擔保品市值 / 借款金額</code>。低於銀行規定的比例，會被要求補錢或強制賣出。</p></div>
+  <div class="gterm"><span class="zh">斷頭</span> <span class="en">Margin Call / Forced Liquidation</span>
+    <p>維持率過低、你又沒補錢時，銀行或券商強制賣掉你的擔保品來償還借款。</p></div>
+  <div class="gterm"><span class="zh">DBR 22 倍</span> <span class="en">Debt Burden Ratio</span>
+    <p>台灣信貸法規：銀行核貸信貸與信用卡循環時，月付金不得超過月收入的 22 倍，是總負債的一種法規上限。</p></div>
+
+</div>
+</details>
+
+</div>
+
+<script>
+const $ = id => document.getElementById(id);
+const IDS = ['valL','valU','cash','loanP','loanQ','eStar','bBuf','band'];
+const STORAGE_KEY = 'exposureCalc.v1';
+function saveState(){
+  const state = {};
+  IDS.forEach(id=>state[id]=$(id).value);
+  try{ localStorage.setItem(STORAGE_KEY, JSON.stringify(state)); }catch(e){}
+}
+function loadState(){
+  try{
+    const raw = localStorage.getItem(STORAGE_KEY);
+    if(!raw) return;
+    const state = JSON.parse(raw);
+    IDS.forEach(id=>{ if(state[id]!==undefined) $(id).value = state[id]; });
+  }catch(e){}
+}
+// 允許輸入欄位打算式（例如 100+200），只接受數字／+ - * / ( ) ／小數點／空白
+function evalExpr(raw){
+  const s = String(raw==null?'':raw).trim();
+  if(s==='') return NaN;
+  if(!/^[0-9+\-*/().\s]+$/.test(s)) return NaN;
+  let i=0;
+  const skip=()=>{ while(s[i]===' ') i++; };
+  function expr(){
+    let v=term(); skip();
+    while(s[i]==='+'||s[i]==='-'){ const op=s[i++]; skip(); const t=term(); v = op==='+'?v+t:v-t; skip(); }
+    return v;
+  }
+  function term(){
+    let v=factor(); skip();
+    while(s[i]==='*'||s[i]==='/'){ const op=s[i++]; skip(); const f=factor(); v = op==='*'?v*f:v/f; skip(); }
+    return v;
+  }
+  function factor(){
+    skip();
+    if(s[i]==='-'){ i++; return -factor(); }
+    if(s[i]==='+'){ i++; return factor(); }
+    if(s[i]==='('){ i++; const v=expr(); skip(); if(s[i]===')') i++; return v; }
+    const m=/^\d+(\.\d+)?|^\.\d+/.exec(s.slice(i));
+    if(!m) return NaN;
+    i+=m[0].length;
+    return parseFloat(m[0]);
+  }
+  skip();
+  const result=expr();
+  skip();
+  return i===s.length ? result : NaN;
+}
+const numOf = id => { const v=evalExpr($(id).value); return isFinite(v) ? v : 0; };
+function fmtNum(v){ if(!isFinite(v)) return '0'; return String(Math.round(v*1e6)/1e6); }
+function normalizeField(id){ $(id).value = fmtNum(evalExpr($(id).value)); }
+
+const nf0 = new Intl.NumberFormat('zh-TW',{maximumFractionDigits:0});
+const money = v => (v<0?'−':'') + nf0.format(Math.abs(Math.round(v)));
+const pct  = (v,d=1) => (v<0?'−':'') + Math.abs(v*100).toFixed(d)+'%';
+const spct = (v,d=1) => (v>=0?'+':'−') + Math.abs(v*100).toFixed(d)+'%';
+const wan  = v => (v/1e4).toLocaleString('zh-TW',{maximumFractionDigits:1}) + ' 萬';
+
+const FEE_RATE=0.001425, FEE_DISC=0.3, FEE_MIN=20, TAX_ETF=0.001;
+const buyCost  = a => a>0 ? Math.max(a*FEE_RATE*FEE_DISC, FEE_MIN) : 0;
+const sellCost = a => a>0 ? Math.max(a*FEE_RATE*FEE_DISC, FEE_MIN) + a*TAX_ETF : 0;
+
+function drawBar(el,l,u,c){
+  const tot=Math.max(l,0)+Math.max(u,0)+Math.max(c,0) || 1;
+  el.innerHTML=[['s-l',l,'正二'],['s-u',u,'大盤'],['s-c',c,'現金']].map(([k,w,n])=>{
+    if(w<=0.001) return '';
+    const sh=w/tot;
+    return `<span class="${k}" style="width:${(sh*100).toFixed(2)}%">${sh>0.11?n+' '+(w*100).toFixed(0)+'%':''}</span>`;
+  }).join('');
+}
+
+function calc(){
+  // 所有金額輸入皆為萬元，內部一律換算為元計算
+  const L=numOf('valL')*1e4, U=numOf('valU')*1e4, C=numOf('cash')*1e4;
+  const P=numOf('loanP')*1e4, Q=numOf('loanQ')*1e4;
+  const Es=numOf('eStar')/100, band=numOf('band')/100;
+
+  [['uL',L],['uU',U],['uC',C],['uP',P],['uQ',Q]].forEach(([k,v])=>{
+    $(k).textContent = `= ${nf0.format(v)} 元`;
+  });
+
+  const A=L+U+C, DEBT=P+Q, NAV=A-DEBT;
+  const expAmt=2*L+U;
+  const solvent = NAV>0;
+
+  const m = A>0 ? expAmt/A : 0;                 // 市場曝險（資產側）
+  const g = solvent ? A/NAV : Infinity;         // 財務槓桿（負債側）
+  const E = solvent ? expAmt/NAV : Infinity;    // 股票組合曝險 = m × g
+  const l = solvent ? L/NAV : 0, u = solvent ? U/NAV : 0, c = solvent ? C/NAV : 0;
+  const D = solvent ? E+2*l-E*E : 0;
+  const invested = A>0 ? (L+U)/A : 0;
+
+  // --- 指標卡：上排金額、下排比率 ---
+  $('oA').textContent = wan(A);
+  $('oAN').textContent = `${nf0.format(A)} 元`;
+
+  $('oNav').textContent = wan(NAV);
+  $('oNav').className = 'v' + (NAV<=0?' danger':'');
+  $('oNavN').textContent = `資產 ${wan(A)} − 負債 ${wan(DEBT)}`;
+
+  $('oExp').textContent = wan(expAmt);
+  $('oExpN').textContent = `2×正二 + 大盤 = ${nf0.format(expAmt)} 元`;
+
+  $('oM').textContent = pct(m);
+  $('oMN').textContent = `${wan(expAmt)} / ${wan(A)}　投入率 ${pct(invested,0)}`;
+
+  $('oG').textContent = solvent ? g.toFixed(2) : '∞';
+  $('oG').className = 'v lv';
+  $('oGN').textContent = solvent
+    ? `${wan(A)} / ${wan(NAV)}　${DEBT>0?'借款 '+wan(DEBT):'無負債'}`
+    : '淨值為負';
+
+  $('oE').textContent = solvent ? pct(E) : '∞';
+  $('oE').className = 'v' + (!solvent ? ' danger' : (E>2.5?' warn':''));
+  $('oEN').textContent = solvent
+    ? `${wan(expAmt)} / ${wan(NAV)}　目標 ${pct(Es,0)}，偏離 ${spct(E-Es,1).replace('%',' 點')}`
+    : '淨值為負';
+
+  $('eqM').textContent = pct(m,0);
+  $('eqG').textContent = solvent ? g.toFixed(2) : '∞';
+  $('eqE').textContent = solvent ? pct(E,0) : '∞';
+  $('eqMS').textContent = `${wan(expAmt)} / ${wan(A)}`;
+  $('eqGS').textContent = `${wan(A)} / ${wan(NAV)}`;
+  $('eqES').textContent = `${wan(expAmt)} / ${wan(NAV)}`;
+  $('ruinPct').textContent = solvent && E>0 ? (100/E).toFixed(0)+'%' : '—';
+
+  // --- 曝險分解 ---
+  $('decomp').innerHTML=[
+    ['正二', L, 2, '#7c3aed'],
+    ['大盤 ETF', U, 1, '#2563eb'],
+    ['現金', C, 0, '#64748b'],
+  ].map(([n,v,w])=>{
+    const ex=v*w;
+    return `<tr><td>${n}</td><td>${money(v)}</td><td>×${w}</td><td>${money(ex)}</td>
+      <td class="cm">${A>0?pct(ex/A,0):'—'}</td><td>${solvent?pct(ex/NAV,0):'—'}</td></tr>`;
+  }).join('') +
+  `<tr style="font-weight:650"><td>合計</td><td>${money(A)}</td><td class="flat">—</td><td>${money(expAmt)}</td>
+    <td class="cm">${pct(m,0)}</td><td>${solvent?pct(E,0):'∞'}</td></tr>`;
+
+  // --- 風險橫幅 ---
+  const risks=[];
+  if(!solvent) risks.push(['bad','<b>淨值為負</b> — 負債已超過總資產。以下再平衡建議無意義，優先去槓桿。']);
+  else {
+    if(E>2.5) risks.push(['act',`股票組合曝險 ${pct(E)} 相當高：大盤跌 ${(100/E).toFixed(0)}% 淨值即歸零。`]);
+    if(D<-0.05) risks.push(['act',
+      `D = ${D.toFixed(2)} 為負 —— <b>財務槓桿 g 壓過了正二的自我保護</b>，下跌時股票組合曝險會自動放大。
+       想改善：還款降 g，或把正二換成大盤降 m。`]);
+  }
+  $('bannerRisk').innerHTML = risks.map(([k,t])=>`<div class="banner ${k}">${t}</div>`).join('');
+
+  // --- 資產負債表 ---
+  $('bs').innerHTML=[
+    ['正二', L], ['大盤 ETF', U], ['現金', C], ['總資產', A],
+    ['信貸', -P], ['質押借款', -Q], ['淨值', NAV],
+  ].map(([n,v])=>{
+    const bold=(n==='總資產'||n==='淨值')?'font-weight:650':'';
+    return `<tr><td style="${bold}">${n}</td><td style="${bold}" class="${v<0?'sell':''}">${money(v)}</td>
+      <td>${A>0?pct(v/A,0):'—'}</td><td>${solvent?pct(v/NAV,0):'—'}</td></tr>`;
+  }).join('');
+
+  if(!solvent){
+    $('banner').className='banner bad';
+    $('banner').innerHTML='<b>無法計算再平衡</b> — 淨值須為正。';
+    ['trades','triggers','scen'].forEach(k=>$(k).innerHTML='');
+    $('costNote').textContent=''; $('clampWarn').hidden=true;
+    drawBar($('barNow'),0,0,0); drawBar($('barTgt'),0,0,0);
+    return;
+  }
+
+  // --- 目標配置 ---
+  const bIn=numOf('bBuf')/100;
+  const bMin=Math.max(0, g-Es), bMax=Math.max(0, g-Es/2);
+  const b=Math.min(Math.max(bIn,bMin),bMax);
+  const cw=$('clampWarn');
+  if(Math.abs(b-bIn)>1e-9){
+    cw.hidden=false;
+    cw.textContent = Es>2*g
+      ? `⚠ 目前 g = ${g.toFixed(2)}，可達股票組合曝險上限 ${pct(2*g,0)}，無法達到目標 ${pct(Es,0)}。需增加借款或降低目標。`
+      : `⚠ 目標 ${pct(Es,0)} 且 g = ${g.toFixed(2)} 之下，現金緩衝只能落在 ${pct(bMin,0)} ～ ${pct(bMax,0)}，已自動調整為 ${pct(b,0)}。`;
+  } else cw.hidden=true;
+
+  const tl=Es-g+b, tu=2*g-Es-2*b, tc=b;
+  const tL=tl*NAV, tU=tu*NAV, tC=tc*NAV;
+  drawBar($('barNow'),l,u,c); drawBar($('barTgt'),tl,tu,tc);
+
+  // --- 觸發判斷 ---
+  const diff=E-Es, trig=Math.abs(diff)>band;
+  const bn=$('banner');
+  bn.className='banner '+(trig?'act':'hold');
+  bn.innerHTML = trig
+    ? `<b>觸發再平衡</b> — 股票組合曝險 ${pct(E)}，偏離目標 ${Math.abs(diff*100).toFixed(1)} 個百分點，超過 ${(band*100).toFixed(0)} 點門檻。${diff>0?'需減碼。':'需加碼。'}
+       隱含目標市場曝險 m* = ${pct(Es/g,0)}。`
+    : `<b>不動作</b> — 股票組合曝險 ${pct(E)}，偏離目標僅 ${Math.abs(diff*100).toFixed(1)} 個百分點，在門檻內。下次再檢查即可。`;
+
+  // --- 交易 ---
+  let cost=0;
+  $('trades').innerHTML=[
+    {n:'正二',now:L,tgt:tL,tradable:true},
+    {n:'大盤',now:U,tgt:tU,tradable:true},
+    {n:'現金',now:C,tgt:tC,tradable:false}
+  ].map(r=>{
+    const d=r.tgt-r.now;
+    let act='<span class="flat">—</span>';
+    if(Math.abs(d)>=1){
+      if(r.tradable){
+        cost += d>0?buyCost(Math.abs(d)):sellCost(Math.abs(d));
+        act = d>0?'<span class="buy">買進</span>':'<span class="sell">賣出</span>';
+      } else act = d>0?'<span class="sell">回收</span>':'<span class="buy">投入</span>';
+    }
+    return `<tr><td>${r.n}</td><td>${money(r.now)}</td><td>${money(r.tgt)}</td>
+      <td>${d>=0?'+':'−'}${money(Math.abs(d))}</td><td>${act}</td></tr>`;
+  }).join('');
+  // E 在門檻內、但組合差很多時（例如 b 被夾住），要講清楚下表只是參考
+  const compOff = (Math.abs(tL-L)+Math.abs(tU-U)) > NAV*0.10;
+  $('costNote').innerHTML =
+    (!trig && compOff
+      ? `<b>注意</b>：股票組合曝險 E 在門檻內、<b>不需動作</b>，但下表是「完全對齊目標配置」的差額 ——
+         目前的 E 是用另一種組合湊出來的。兩者 E 相同、<b>漂移特性 D 不同</b>。
+         除非你想改變下跌時的行為，否則不必執行。<br>`
+      : '') +
+    (cost>0
+      ? `估計交易成本 <b>${money(cost)} 元</b>（手續費 0.1425%×${FEE_DISC*10}折、最低 20 元；ETF 賣出證交稅 0.1%）＝ 淨值的 ${pct(cost/NAV,3)}。`
+      : '目前無需交易。');
+
+  // --- 情境 ---
+  $('scen').innerHTML=[-0.4,-0.3,-0.2,-0.1,0,0.1,0.2,0.3].map(r=>{
+    const L2=Math.max(L*(1+2*r),0), U2=U*(1+r), A2=L2+U2+C, N2=A2-DEBT;
+    const ex2=2*L2+U2;
+    const m2=A2>0?ex2/A2:0, g2=N2>0?A2/N2:Infinity, E2=N2>0?ex2/N2:0;
+    const ret=N2/NAV-1;
+    return `<tr class="${N2<=0?'brk':''}">
+      <td class="${r>0?'buy':(r<0?'sell':'flat')}">${spct(r,0)}</td>
+      <td>${money(L2)}</td><td>${money(U2)}</td><td class="cx">${money(ex2)}</td><td>${money(A2)}</td><td>${money(N2)}</td>
+      <td class="${ret>0?'buy':(ret<0?'sell':'flat')}">${N2>0?spct(ret):'歸零'}</td>
+      <td class="cm">${pct(m2,0)}</td>
+      <td class="cg">${N2>0?g2.toFixed(2):'∞'}</td>
+      <td>${N2>0?pct(E2,0):'—'}</td></tr>`;
+  }).join('');
+
+  // --- 下次觸發 ---
+  const Dt=Es+2*tl-Es*Es;
+  const mk=(dlt,label)=>{
+    const den=Dt-dlt*Es;
+    // Dt 可正可負：Dt>0 時漲會推高 E，Dt<0 時跌會推高 E。r 的正負自己會說明方向。
+    if(Math.abs(den)<1e-9)
+      return `<tr><td>${label}</td><td colspan="3" class="flat">此配置不會往該方向漂移（D ≈ ${Dt.toFixed(2)}）</td></tr>`;
+    const r=dlt/den;
+    if(!isFinite(r)||r<=-0.95||r>3)
+      return `<tr><td>${label}</td><td colspan="3" class="flat">需極端行情，實務上不會觸發</td></tr>`;
+    return `<tr><td>${label}</td><td>${spct(r)}</td><td>${pct(Es+dlt)}</td><td>${spct(Es*r)}</td></tr>`;
+  };
+  $('triggers').innerHTML = mk(band,'曝險過高 → 減碼') + mk(-band,'曝險過低 → 加碼');
+}
+
+IDS.forEach(id=>{
+  const el=$(id);
+  el.addEventListener('input',()=>{ saveState(); calc(); });
+  el.addEventListener('keydown',e=>{
+    if(e.key==='Enter'){ e.preventDefault(); normalizeField(id); saveState(); calc(); }
+  });
+  el.addEventListener('blur',()=>{ normalizeField(id); saveState(); calc(); });
+});
+loadState();
+calc();
+</script>
+</body>
+</html>
