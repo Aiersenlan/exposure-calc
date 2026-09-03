@@ -105,6 +105,13 @@ hr { border:none; border-top:1px solid var(--line); margin:32px 0 0; }
 .footer a { color:var(--muted); font-size:12.5px; text-decoration:none; border-bottom:1px dotted var(--muted); padding-bottom:1px; }
 .footer a:hover { color:var(--accent); border-color:var(--accent); }
 
+.gchart { width:100%; height:auto; font-variant-numeric:tabular-nums; }
+.gchart text { fill:var(--muted); }
+.gchart .val { fill:var(--text); font-weight:650; }
+.reflist { list-style:none; margin:10px 0 0; padding:0; font-size:12.5px; line-height:1.9; }
+.reflist a { color:var(--accent); text-decoration:none; }
+.reflist a:hover { text-decoration:underline; }
+
 details.gloss { background:var(--panel); border:1px solid var(--line); border-radius:10px; padding:2px 16px; margin-bottom:22px; }
 details.gloss summary { cursor:pointer; padding:14px 0; font-size:14px; font-weight:650; list-style:none; display:flex; align-items:center; gap:8px; }
 details.gloss summary::-webkit-details-marker { display:none; }
@@ -317,6 +324,61 @@ details.gloss[open] summary::before { transform:rotate(90deg); }
 
 </div>
 </details>
+
+<h2>生命週期投資參考 <span style="font-weight:400;color:var(--muted);font-size:11px">Lifecycle Investing</span></h2>
+<div class="card">
+  <svg class="gchart" viewBox="0 0 700 300" role="img" aria-label="折線圖：生命週期投資法建議的股票配置佔淨值比例隨年齡變化。25歲起維持200%（2倍槓桿），約45至50歲降到100%（去槓桿完成），65歲退休時降到83%。">
+    <g stroke="var(--line)" stroke-width="1">
+      <line x1="50" y1="23.6" x2="680" y2="23.6"></line>
+      <line x1="50" y1="82.6" x2="680" y2="82.6"></line>
+      <line x1="50" y1="141.8" x2="680" y2="141.8"></line>
+      <line x1="50" y1="200.9" x2="680" y2="200.9"></line>
+      <line x1="50" y1="260" x2="680" y2="260"></line>
+    </g>
+    <g font-size="11" text-anchor="end">
+      <text x="42" y="27.6">200%</text>
+      <text x="42" y="86.6">150%</text>
+      <text x="42" y="145.8">100%</text>
+      <text x="42" y="204.9">50%</text>
+      <text x="42" y="264">0%</text>
+    </g>
+    <g font-size="11" text-anchor="middle">
+      <text x="50" y="278">25歲</text>
+      <text x="207.5" y="278">35歲</text>
+      <text x="365" y="278">45歲</text>
+      <text x="522.5" y="278">55歲</text>
+      <text x="680" y="278">65歲</text>
+    </g>
+    <line x1="50" y1="141.8" x2="680" y2="141.8" stroke="var(--muted)" stroke-width="1" stroke-dasharray="3 4"></line>
+    <text x="55" y="136" font-size="10.5">無槓桿線（g=1）</text>
+    <path d="M50,23.6 L128.8,23.6 L207.5,23.6 L286.3,62.6 L365,102.8 L443.8,141.8 L522.5,148.9 L601.3,154.9 L680,161.9 L680,260 L50,260 Z" fill="var(--ex)" opacity="0.12"></path>
+    <polyline points="50,23.6 128.8,23.6 207.5,23.6 286.3,62.6 365,102.8 443.8,141.8 522.5,148.9 601.3,154.9 680,161.9" fill="none" stroke="var(--ex)" stroke-width="2.5" stroke-linejoin="round" stroke-linecap="round"></polyline>
+    <g fill="var(--ex)">
+      <circle cx="50" cy="23.6" r="4"></circle>
+      <circle cx="443.8" cy="141.8" r="4"></circle>
+      <circle cx="680" cy="161.9" r="4"></circle>
+    </g>
+    <g class="val" font-size="12" text-anchor="middle">
+      <text x="50" y="14">200%</text>
+      <text x="443.8" y="130">100%</text>
+      <text x="655" y="177" text-anchor="end">83%</text>
+    </g>
+  </svg>
+  <div class="note">
+    <b>Ayres &amp; Nalebuff（2010）</b> 建議年輕時把股票配置槓桿拉高到 <b>200%</b>（2倍margin），隨財富累積分三階段降槓桿：
+    Stage 1（累積達目標值 0–50%）維持 2x；Stage 2（50–100%）槓桿線性降到 1x；Stage 3（達 100%）完全去槓桿後，股票佔比再緩降到退休時的 <b>83%</b>。
+    這條曲線的 y 軸換算成本頁的符號就是 <code>E</code>——200% 是 <code>E=2.0</code>，83% 是 <code>E=0.83</code>。<br><br>
+    <b>年齡軸是示意值，不是論文原圖</b>：原始模型是照「累積財富達目標值的百分比」分階段，不是直接綁定年齡——轉折點取決於個人儲蓄率與實際市場報酬，牛市會比熊市更快從 Stage 1 進入 Stage 2。上圖是依書中「25歲起、40年投資期、目標83%終身股票配置」的例子畫出的示意曲線。
+  </div>
+  <ul class="reflist">
+    <li><a href="https://spinup-000d1a-wp-offload-media.s3.amazonaws.com/faculty/wp-content/uploads/sites/8/2019/06/LifecycleInvestingLeverage_v2008.pdf" target="_blank" rel="noopener">Ayres &amp; Nalebuff — Life-Cycle Investing and Leverage（NBER Working Paper）</a></li>
+    <li><a href="https://www.semanticscholar.org/paper/Life-Cycle-Investing-and-Leverage:-Buying-Stock-on-Ayres-Nalebuff/b0528388252d45bd42a5e4cbbff2ff6f7d91ceb2" target="_blank" rel="noopener">Semantic Scholar — 論文條目</a></li>
+    <li><a href="https://www.lifecycleinvesting.net/" target="_blank" rel="noopener">Lifecycle Investing — 書籍網站</a></li>
+    <li><a href="https://www.bogleheads.org/forum/viewtopic.php?t=274390" target="_blank" rel="noopener">Bogleheads — Lifecycle Investing 討論串</a></li>
+    <li><a href="https://blog.jessriedel.com/2020/04/11/review-of-lifecycle-investing/" target="_blank" rel="noopener">foreXiv — Review of Lifecycle Investing</a></li>
+    <li><a href="https://www.lesswrong.com/posts/4wL5rcS97rw58G98B/review-of-lifecycle-investing" target="_blank" rel="noopener">LessWrong — Review of Lifecycle Investing</a></li>
+  </ul>
+</div>
 
 <div class="footer"><a href="https://github.com/Aiersenlan/exposure-calc" target="_blank" rel="noopener">在 GitHub 上查看原始碼</a></div>
 
