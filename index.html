@@ -106,6 +106,9 @@ tr.brk td { background:var(--danger-bg); }
 .st-f { font-size:12.5px; color:var(--muted); border-top:1px dashed var(--line); padding-top:6px; font-variant-numeric:tabular-nums; }
 .st-f .lab { display:block; font-size:11.5px; } .st-f span:last-child { color:var(--text); font-size:13.5px; }
 .st-v { font-size:26px; font-weight:700; letter-spacing:-.02em; font-variant-numeric:tabular-nums; }
+.frac { display:inline-flex; flex-direction:column; align-items:stretch; text-align:center; font-size:12px; color:var(--muted); }
+.frac .ft { border-bottom:2px solid var(--text); padding:0 6px 3px; } .frac .fb { padding:3px 6px 0; }
+.frac b { color:var(--text); font-size:13.5px; font-weight:600; font-variant-numeric:tabular-nums; }
 .step.hl .st-v { color:var(--accent); }
 .st-arrow { align-self:center; font-size:20px; color:var(--muted); }
 .st-sum { margin-top:12px; padding:11px 14px; border-radius:8px; background:var(--panel-2); font-size:13.5px; line-height:1.7; }
@@ -255,7 +258,7 @@ details.gloss[open] summary::before { transform:rotate(90deg); }
     <div class="step hl">
       <div class="st-h"><span class="badge">3</span>實質曝險 ERR</div>
       <div class="st-q">你的淨資產實際承受的波動倍數</div>
-      <div class="st-f"><span class="lab">② 曝險金額 ÷ ① 淨資產</span><span id="fErrX"></span></div>
+      <div class="st-f"><span class="frac"><span class="ft">② 曝險金額　<b id="fFT"></b></span><span class="fb">① 淨資產　<b id="fFB"></b></span></span></div>
       <div class="st-v" id="fErrV"></div>
     </div>
   </div>
@@ -539,7 +542,8 @@ function calc(){
   $('fNavV').textContent = wan(NAV);
   $('fExpX').textContent = `${wan(L)} × 2 + ${wan(U)} × 1`;
   $('fExpV').textContent = wan(expAmt);
-  $('fErrX').textContent = solvent ? `${wan(expAmt)} ÷ ${wan(NAV)}` : '淨值為負，無法計算';
+  $('fFT').textContent = wan(expAmt);
+  $('fFB').textContent = wan(NAV);
   $('fErrV').textContent = solvent ? pct(E) : '∞';
   $('fErrV').style.color = !solvent ? 'var(--danger)' : (E>2.5 ? 'var(--warn)' : '');
   $('fSum').innerHTML = solvent
