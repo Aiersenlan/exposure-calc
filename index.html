@@ -167,7 +167,7 @@ details.gloss[open] summary::before { transform:rotate(90deg); }
 <div class="card">
   <div class="note" style="margin-top:0">
     小明有 10 萬投入現金、10 萬預留現金、20 萬緊急預備金，持有 15 萬正二與 100 萬 0050，另有信貸 20 萬、質押借款 10 萬。
-    某天他再借信貸 30 萬、質押 10 萬（共 40 萬），把緊急預備金提高到 50 萬、預留現金提高到 20 萬，其餘全部拿去投資，
+    某天他再借信貸 30 萬、質押 20 萬（共 50 萬），把緊急預備金提高到 50 萬、預留現金提高到 20 萬，其餘全部拿去投資，
     目標實質曝險拉到 <a href="#lifecycle" style="color:var(--accent)">生命週期投資參考</a>中的 <b>200%</b>。按下按鈕自動帶入：
   </div>
   <div class="exlegend">
@@ -180,23 +180,23 @@ details.gloss[open] summary::before { transform:rotate(90deg); }
     <thead><tr><th>欄位（萬元）</th><th>角色</th><th>① 借款前</th><th></th><th>② 借款後</th></tr></thead>
     <tbody>
       <tr><td>緊急預備金</td><td><span class="tg tg-op">操作</span></td><td>20</td><td style="text-align:center;color:var(--accent);font-weight:700">→</td><td>50</td></tr>
-      <tr><td>投入現金</td><td><span class="tg tg-ct">控制</span></td><td>10</td><td style="text-align:center;color:var(--accent);font-weight:700">→</td><td>10</td></tr>
+      <tr><td>投入現金</td><td><span class="tg tg-op">操作</span></td><td>10</td><td style="text-align:center;color:var(--accent);font-weight:700">→</td><td>20</td></tr>
       <tr><td>預留現金</td><td><span class="tg tg-op">操作</span></td><td>10</td><td style="text-align:center;color:var(--accent);font-weight:700">→</td><td>20</td></tr>
       <tr><td>大盤正二 ETF 市值</td><td><span class="tg tg-ct">控制</span></td><td>15</td><td style="text-align:center;color:var(--accent);font-weight:700">→</td><td>15</td></tr>
       <tr><td>大盤 ETF（0050）市值</td><td><span class="tg tg-ct">控制</span></td><td>100</td><td style="text-align:center;color:var(--accent);font-weight:700">→</td><td>100</td></tr>
       <tr><td>信貸餘額</td><td><span class="tg tg-op">操作</span></td><td>20</td><td style="text-align:center;color:var(--accent);font-weight:700">→</td><td>50</td></tr>
-      <tr><td>質押借款餘額</td><td><span class="tg tg-op">操作</span></td><td>10</td><td style="text-align:center;color:var(--accent);font-weight:700">→</td><td>20</td></tr>
+      <tr><td>質押借款餘額</td><td><span class="tg tg-op">操作</span></td><td>10</td><td style="text-align:center;color:var(--accent);font-weight:700">→</td><td>30</td></tr>
       <tr><td>目標實質曝險 ERR*</td><td><span class="tg tg-op">操作</span></td><td>—</td><td style="text-align:center;color:var(--accent);font-weight:700">→</td><td>200%</td></tr>
       <tr style="font-weight:650"><td>→ 淨資產 NAV</td><td><span class="tg tg-rs">應變</span></td><td class="">105</td><td style="text-align:center;color:var(--accent);font-weight:700">→</td><td style="color:var(--accent)">75</td></tr>
       <tr style="font-weight:650"><td>→ 目前實質曝險 ERR</td><td><span class="tg tg-rs">應變</span></td><td class="">124%</td><td style="text-align:center;color:var(--accent);font-weight:700">→</td><td style="color:var(--accent)">173%</td></tr>
-      <tr style="font-weight:650"><td>→ 算出目標正二市值</td><td><span class="tg tg-rs">應變</span></td><td class="flat">—</td><td style="text-align:center;color:var(--accent);font-weight:700">→</td><td style="color:var(--accent)">25</td></tr>
-      <tr style="font-weight:650"><td>→ 算出目標 0050 市值</td><td><span class="tg tg-rs">應變</span></td><td class="flat">—</td><td style="text-align:center;color:var(--accent);font-weight:700">→</td><td style="color:var(--accent)">100</td></tr>
+      <tr style="font-weight:650"><td>→ 算出目標正二市值</td><td><span class="tg tg-rs">應變</span></td><td class="flat">—</td><td style="text-align:center;color:var(--accent);font-weight:700">→</td><td style="color:var(--accent)">15</td></tr>
+      <tr style="font-weight:650"><td>→ 算出目標 0050 市值</td><td><span class="tg tg-rs">應變</span></td><td class="flat">—</td><td style="text-align:center;color:var(--accent);font-weight:700">→</td><td style="color:var(--accent)">120</td></tr>
       <tr><td></td><td></td><td><button type="button" class="exbtn" data-ex="0">帶入 ①</button></td><td style="text-align:center;color:var(--accent);font-weight:700">→</td><td><button type="button" class="exbtn" data-ex="1">帶入 ②</button></td></tr>
     </tbody>
 </table></div>
   <div class="note">
-    ② 的投入現金 10 = 原投入現金 10 + 借款 40 − 補足緊急預備金 30（20 → 50）− 補足預留現金 10（10 → 20）。<br>
-    <b>結果</b>：② 的總資產 145 萬、負債 70 萬、NAV 75 萬，目前 ERR = 130 ÷ 75 ≈ 173%。要拉到 200%，目標配置是正二 25 萬、0050 100 萬：買進正二 10 萬，用掉全部投入現金，買完後 ERR = (25×2 + 100) ÷ 75 = 200%。
+    ② 的投入現金 20 = 原投入現金 10 + 借款 50 − 補足緊急預備金 30（20 → 50）− 補足預留現金 10（10 → 20）。<br>
+    <b>結果</b>：② 的總資產 155 萬、負債 80 萬、NAV 75 萬，目前 ERR = 130 ÷ 75 ≈ 173%。要拉到 200%，目標配置是正二 15 萬（不變）、0050 120 萬：買進 0050 20 萬，用掉全部投入現金，買完後 ERR = (15×2 + 120) ÷ 75 = 200%。
   </div>
 </div>
 
@@ -591,7 +591,7 @@ function calc(){
     {n:'投入現金',now:C,tgt:0,tradable:false},
     {n:'預留現金',now:R,tgt:R,tradable:false}
   ].map(r=>{
-    const d=r.tgt-r.now;
+    const d=Math.round(r.tgt-r.now);
     let act='<span class="flat">—</span>';
     if(Math.abs(d)>=1){
       if(r.tradable){
@@ -617,7 +617,7 @@ IDS.forEach(id=>{
 });
 const EXAMPLES = [
   {cash:10, reserve:10, emerg:20, valL:15, valU:100, loanP:20, loanQ:10, eStar:200},
-  {cash:10, reserve:20, emerg:50, valL:15, valU:100, loanP:50, loanQ:20, eStar:200},
+  {cash:20, reserve:20, emerg:50, valL:15, valU:100, loanP:50, loanQ:30, eStar:200},
 ];
 document.querySelectorAll('.exbtn').forEach(btn=>{
   btn.addEventListener('click',()=>{
