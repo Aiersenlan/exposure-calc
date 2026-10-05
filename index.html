@@ -577,14 +577,18 @@ function calc(){
   // --- 交易 ---
   let cost=0;
   $('trades').innerHTML=[
-    {n:'正二',now:L,tgt:tL},
-    {n:'大盤',now:U,tgt:tU}
+    {n:'正二',now:L,tgt:tL,tradable:true},
+    {n:'大盤',now:U,tgt:tU,tradable:true},
+    {n:'投入現金',now:C,tgt:0,tradable:false},
+    {n:'預留現金',now:R,tgt:R,tradable:false}
   ].map(r=>{
     const d=r.tgt-r.now;
     let act='<span class="flat">—</span>';
     if(Math.abs(d)>=1){
-      cost += d>0?buyCost(Math.abs(d)):sellCost(Math.abs(d));
-      act = d>0?'<span class="buy">買進</span>':'<span class="sell">賣出</span>';
+      if(r.tradable){
+        cost += d>0?buyCost(Math.abs(d)):sellCost(Math.abs(d));
+        act = d>0?'<span class="buy">買進</span>':'<span class="sell">賣出</span>';
+      } else act = d>0?'<span class="sell">回收</span>':'<span class="buy">投入</span>';
     }
     return `<tr><td>${r.n}</td><td>${money(r.now)}</td><td>${money(r.tgt)}</td>
       <td>${d>=0?'+':'−'}${money(Math.abs(d))}</td><td>${act}</td></tr>`;
