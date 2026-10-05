@@ -119,6 +119,9 @@ tr.brk td { background:var(--danger-bg); }
 .fm .fx { color:var(--muted); font-size:13px; font-variant-numeric:tabular-nums; }
 .fm .fv { font-size:22px; font-weight:650; font-variant-numeric:tabular-nums; letter-spacing:-.02em; }
 @media (max-width:640px){ .fm { grid-template-columns:1fr auto; } .fm .fx { grid-column:1 / -1; order:3; } }
+.exlegend { font-size:12.5px; color:var(--muted); line-height:2; margin:12px 0 4px; }
+.tg { display:inline-block; font-size:11px; font-weight:600; padding:1px 8px; border-radius:10px; color:#fff; }
+.tg-op { background:var(--accent); } .tg-ct { background:#64748b; } .tg-rs { background:#15803d; }
 .extbl { table-layout:fixed; }
 .extbl th, .extbl td { text-align:center; }
 .extbl th:first-child, .extbl td:first-child { text-align:left; }
@@ -167,21 +170,28 @@ details.gloss[open] summary::before { transform:rotate(90deg); }
     某天他再借信貸 30 萬、質押 10 萬（共 40 萬），把緊急預備金提高到 50 萬、預留現金提高到 20 萬，其餘全部拿去投資，
     目標實質曝險拉到 <a href="#lifecycle" style="color:var(--accent)">生命週期投資參考</a>中的 <b>200%</b>。按下按鈕自動帶入：
   </div>
+  <div class="exlegend">
+    <span class="tg tg-op">操作</span> 操作變因：你主動改變的數字　
+    <span class="tg tg-ct">控制</span> 控制變因：維持不變的數字　
+    <span class="tg tg-rs">應變</span> 應變變因：隨之改變、由計算機算出的結果
+  </div>
   <div class="tw"><table class="extbl">
-    <colgroup><col style="width:40%"><col style="width:24%"><col style="width:12%"><col style="width:24%"></colgroup>
-    <thead><tr><th>欄位（萬元）</th><th>① 借款前</th><th></th><th>② 借款後</th></tr></thead>
+    <colgroup><col style="width:34%"><col style="width:12%"><col style="width:20%"><col style="width:12%"><col style="width:22%"></colgroup>
+    <thead><tr><th>欄位（萬元）</th><th>角色</th><th>① 借款前</th><th></th><th>② 借款後</th></tr></thead>
     <tbody>
-      <tr><td>緊急預備金</td><td>20</td><td style="text-align:center;color:var(--accent);font-weight:700">→</td><td>50</td></tr>
-      <tr><td>投入現金</td><td>10</td><td style="text-align:center;color:var(--accent);font-weight:700">→</td><td>10</td></tr>
-      <tr><td>預留現金</td><td>10</td><td style="text-align:center;color:var(--accent);font-weight:700">→</td><td>20</td></tr>
-      <tr><td>大盤正二 ETF 市值</td><td>15</td><td style="text-align:center;color:var(--accent);font-weight:700">→</td><td>15</td></tr>
-      <tr><td>大盤 ETF（0050）市值</td><td>100</td><td style="text-align:center;color:var(--accent);font-weight:700">→</td><td>100</td></tr>
-      <tr><td>信貸餘額</td><td>20</td><td style="text-align:center;color:var(--accent);font-weight:700">→</td><td>50</td></tr>
-      <tr><td>質押借款餘額</td><td>10</td><td style="text-align:center;color:var(--accent);font-weight:700">→</td><td>20</td></tr>
-      <tr><td>目標實質曝險 ERR*</td><td>—</td><td style="text-align:center;color:var(--accent);font-weight:700">→</td><td>200%</td></tr>
-      <tr style="font-weight:650"><td>→ 算出目標正二市值</td><td class="flat">—</td><td style="text-align:center;color:var(--accent);font-weight:700">→</td><td style="color:var(--accent)">25</td></tr>
-      <tr style="font-weight:650"><td>→ 算出目標 0050 市值</td><td class="flat">—</td><td style="text-align:center;color:var(--accent);font-weight:700">→</td><td style="color:var(--accent)">100</td></tr>
-      <tr><td></td><td><button type="button" class="exbtn" data-ex="0">帶入 ①</button></td><td style="text-align:center;color:var(--accent);font-weight:700">→</td><td><button type="button" class="exbtn" data-ex="1">帶入 ②</button></td></tr>
+      <tr><td>緊急預備金</td><td><span class="tg tg-op">操作</span></td><td>20</td><td style="text-align:center;color:var(--accent);font-weight:700">→</td><td>50</td></tr>
+      <tr><td>投入現金</td><td><span class="tg tg-ct">控制</span></td><td>10</td><td style="text-align:center;color:var(--accent);font-weight:700">→</td><td>10</td></tr>
+      <tr><td>預留現金</td><td><span class="tg tg-op">操作</span></td><td>10</td><td style="text-align:center;color:var(--accent);font-weight:700">→</td><td>20</td></tr>
+      <tr><td>大盤正二 ETF 市值</td><td><span class="tg tg-ct">控制</span></td><td>15</td><td style="text-align:center;color:var(--accent);font-weight:700">→</td><td>15</td></tr>
+      <tr><td>大盤 ETF（0050）市值</td><td><span class="tg tg-ct">控制</span></td><td>100</td><td style="text-align:center;color:var(--accent);font-weight:700">→</td><td>100</td></tr>
+      <tr><td>信貸餘額</td><td><span class="tg tg-op">操作</span></td><td>20</td><td style="text-align:center;color:var(--accent);font-weight:700">→</td><td>50</td></tr>
+      <tr><td>質押借款餘額</td><td><span class="tg tg-op">操作</span></td><td>10</td><td style="text-align:center;color:var(--accent);font-weight:700">→</td><td>20</td></tr>
+      <tr><td>目標實質曝險 ERR*</td><td><span class="tg tg-op">操作</span></td><td>—</td><td style="text-align:center;color:var(--accent);font-weight:700">→</td><td>200%</td></tr>
+      <tr style="font-weight:650"><td>→ 淨資產 NAV</td><td><span class="tg tg-rs">應變</span></td><td class="">105</td><td style="text-align:center;color:var(--accent);font-weight:700">→</td><td style="color:var(--accent)">75</td></tr>
+      <tr style="font-weight:650"><td>→ 目前實質曝險 ERR</td><td><span class="tg tg-rs">應變</span></td><td class="">124%</td><td style="text-align:center;color:var(--accent);font-weight:700">→</td><td style="color:var(--accent)">173%</td></tr>
+      <tr style="font-weight:650"><td>→ 算出目標正二市值</td><td><span class="tg tg-rs">應變</span></td><td class="flat">—</td><td style="text-align:center;color:var(--accent);font-weight:700">→</td><td style="color:var(--accent)">25</td></tr>
+      <tr style="font-weight:650"><td>→ 算出目標 0050 市值</td><td><span class="tg tg-rs">應變</span></td><td class="flat">—</td><td style="text-align:center;color:var(--accent);font-weight:700">→</td><td style="color:var(--accent)">100</td></tr>
+      <tr><td></td><td></td><td><button type="button" class="exbtn" data-ex="0">帶入 ①</button></td><td style="text-align:center;color:var(--accent);font-weight:700">→</td><td><button type="button" class="exbtn" data-ex="1">帶入 ②</button></td></tr>
     </tbody>
 </table></div>
   <div class="note">
