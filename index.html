@@ -162,19 +162,19 @@ details.gloss[open] summary::before { transform:rotate(90deg); }
 <div class="wrap">
 
 <h1>曝險計算機</h1>
-<p class="sub">淨資產 NAV = 總資產 A − 負債 ‧ 實質曝險 ERR = 曝險金額 / 淨資產 ‧ 正二 + 大盤 + 現金 + 信貸 + 質押</p>
+<p class="sub">淨資產 NAV = 總資產 − 負債 ‧ 實質曝險 ERR = 曝險金額 ÷ 淨資產</p>
 
 <h2>範例：小明怎麼填 <span style="font-weight:400;color:var(--muted);font-size:11px">Example</span></h2>
 <div class="card">
   <div class="note" style="margin-top:0">
-    小明有 10 萬投入現金、10 萬預留現金、20 萬緊急預備金，持有 15 萬正二與 100 萬 0050，沒有負債。
-    某天他借了信貸 150 萬，把緊急預備金提高到 50 萬、預留現金提高到 55 萬，其餘全部拿去投資，
-    目標實質曝險拉到 <a href="#lifecycle" style="color:var(--accent)">生命週期投資參考</a>中的 <b>200%</b>。按下「帶入」自動填入：
+    小明有投入現金 10、預留現金 10、緊急預備金 20（萬元），持有正二 15、0050 100，無負債。
+    他借信貸 150，把緊急預備金提高到 50、預留現金提高到 55，其餘投入，目標 ERR 設為 <a href="#lifecycle" style="color:var(--accent)">生命週期投資參考</a>中的 <b>200%</b>。按「帶入」填入表單：
   </div>
   <div class="exlegend">
-    <span class="tg tg-op">操作</span> 操作變因：你自己決定的數字　
-    <span class="tg tg-ct">控制</span> 控制變因：先固定好的條件　
-    <span class="tg tg-rs">應變</span> 應變變因：由計算機算出、隨之改變的結果　<span style="color:var(--danger)">▢ 紅框 = 按鈕會帶入表單的數字</span>
+    <span class="tg tg-op">操作</span> 你決定的數字　
+    <span class="tg tg-ct">控制</span> 固定的條件　
+    <span class="tg tg-rs">應變</span> 計算機算出的結果　
+    <span style="color:var(--danger)">▢ 紅框 = 帶入表單的數字</span>
   </div>
   <div class="tw"><table class="extbl">
     <colgroup><col style="width:34%"><col style="width:12%"><col style="width:20%"><col style="width:12%"><col style="width:22%"></colgroup>
@@ -192,54 +192,54 @@ details.gloss[open] summary::before { transform:rotate(90deg); }
     </tbody>
 </table></div>
   <div class="note">
-    正二、0050 的 ② 顯示的是計算機算出的目標市值（帶入時欄位填的是目前持股 15、100）。<br>
-    ② 的投入現金 85 = 原投入現金 10 + 原預留現金 10 + 借款 150 − 補足緊急預備金 30（20 → 50）− 預留現金 55。<br>
-    <b>結果</b>：② 的總資產 255 萬、負債 150 萬、NAV 105 萬，目前 ERR = 130 ÷ 105 ≈ 124%。要拉到 200%，目標配置是正二 10 萬、0050 190 萬：賣出正二 5 萬、買進 0050 90 萬，用掉全部投入現金，買完後 ERR = (10×2 + 190) ÷ 105 = 200%。
+    正二、0050 的 ② 是算出的目標市值，帶入時填的是目前持股 15、100。<br>
+    投入現金 85 = 10 + 10 + 借款 150 − 補預備金 30 − 預留現金 55。<br>
+    <b>結果</b>：總資產 255、負債 150、NAV 105，目前 ERR = 130 ÷ 105 ≈ 124%。目標配置為正二 10、0050 190（賣正二 5、買 0050 90），買完 ERR = (10×2 + 190) ÷ 105 = 200%。
   </div>
 </div>
 
 <h2>資金 <span style="font-weight:400;color:var(--muted);font-size:11px">Funds</span></h2>
 <div class="card">
   <div class="grid g2">
-    <div><label>緊急預備金（萬元）<br><span style="opacity:.7">Emergency Fund</span></label><input type="text" inputmode="text" autocomplete="off" class="numfield" id="emerg" value="30"><div class="unit" id="uEm"></div></div>
+    <div><label>緊急預備金（萬元）<br><span style="opacity:.7">Emergency Fund</span></label><input type="text" inputmode="text" autocomplete="off" class="numfield" id="emerg" value="50"><div class="unit" id="uEm"></div></div>
   </div>
   <div class="note" style="margin-top:6px">緊急預備金不參與任何投資計算。</div>
   <div class="grid g2" style="margin-top:14px">
-    <div><label>投入現金（萬元，<span style="color:var(--danger)">含申請中的貸款金額</span>）<br><span style="opacity:.7">Cash to Invest</span></label><input type="text" inputmode="text" autocomplete="off" class="numfield" id="cash" value="120"><div class="unit" id="uC"></div></div>
-    <div><label>預留現金（萬元）<br><span style="opacity:.7">Reserved Cash</span></label><input type="text" inputmode="text" autocomplete="off" class="numfield" id="reserve" value="0"><div class="unit" id="uR"></div></div>
+    <div><label>投入現金（萬元，<span style="color:var(--danger)">含申請中的貸款金額</span>）<br><span style="opacity:.7">Cash to Invest</span></label><input type="text" inputmode="text" autocomplete="off" class="numfield" id="cash" value="85"><div class="unit" id="uC"></div></div>
+    <div><label>預留現金（萬元）<br><span style="opacity:.7">Reserved Cash</span></label><input type="text" inputmode="text" autocomplete="off" class="numfield" id="reserve" value="55"><div class="unit" id="uR"></div></div>
   </div>
-  <div class="note">投入現金買正二或原型；預留現金則不會，但仍會算入資產。<span style="color:var(--danger)">申請中的貸款請同時填在下方負債。</span></div>
+  <div class="note">投入現金用來買正二或大盤；預留現金不買，但計入資產。<span style="color:var(--danger)">申請中的貸款請同時填在下方負債。</span></div>
 </div>
 
 <h2>目前股票市值 <span style="font-weight:400;color:var(--muted);font-size:11px">Current Stock Value</span></h2>
 <div class="card">
   <div class="grid g2">
-    <div><label>大盤正二 ETF 市值（萬元）<br><span style="opacity:.7">2x Leveraged ETF</span></label><input type="text" inputmode="text" autocomplete="off" class="numfield" id="valL" value="60"><div class="unit" id="uL"></div></div>
-    <div><label>大盤 ETF 市值（萬元）<br><span style="opacity:.7">Market ETF</span></label><input type="text" inputmode="text" autocomplete="off" class="numfield" id="valU" value="20"><div class="unit" id="uU"></div></div>
+    <div><label>大盤正二 ETF 市值（萬元）<br><span style="opacity:.7">2x Leveraged ETF</span></label><input type="text" inputmode="text" autocomplete="off" class="numfield" id="valL" value="15"><div class="unit" id="uL"></div></div>
+    <div><label>大盤 ETF 市值（萬元）<br><span style="opacity:.7">Market ETF</span></label><input type="text" inputmode="text" autocomplete="off" class="numfield" id="valU" value="100"><div class="unit" id="uU"></div></div>
   </div>
   <div class="note">
-    <span style="color:var(--danger)">填「目前市值」，不是投入成本</span> —— 曝險完全由市值決定，成本價不進任何公式。
-    台股沒有資本利得稅，賣出也沒有稅務考量。配息入帳後直接加進上方現金。
+<span style="color:var(--danger)">填「目前市值」，不是投入成本。</span>
+    台股無資本利得稅，賣出不需考慮稅務。配息入帳後加進投入現金。
   </div>
 </div>
 
 <h2>負債 <span style="font-weight:400;color:var(--muted);font-size:11px">Liabilities</span></h2>
 <div class="card">
   <div class="grid g2">
-    <div><label>信貸 餘額（萬元）<br><span style="opacity:.7">Unsecured Loan (P)</span></label><input type="text" inputmode="text" autocomplete="off" class="numfield" id="loanP" value="40"><div class="unit" id="uP"></div></div>
-    <div><label>質押借款 餘額（萬元）<br><span style="opacity:.7">Pledged Loan (Q)</span></label><input type="text" inputmode="text" autocomplete="off" class="numfield" id="loanQ" value="20"><div class="unit" id="uQ"></div></div>
+    <div><label>信貸 餘額（萬元）<br><span style="opacity:.7">Unsecured Loan (P)</span></label><input type="text" inputmode="text" autocomplete="off" class="numfield" id="loanP" value="150"><div class="unit" id="uP"></div></div>
+    <div><label>質押借款 餘額（萬元）<br><span style="opacity:.7">Pledged Loan (Q)</span></label><input type="text" inputmode="text" autocomplete="off" class="numfield" id="loanQ" value="0"><div class="unit" id="uQ"></div></div>
   </div>
 </div>
 
 <h2>目標政策 <span style="font-weight:400;color:var(--muted);font-size:11px">Target Policy</span></h2>
 <div class="card">
   <div class="grid">
-    <div><label>目標實質曝險 ERR*（%）<br><span style="opacity:.7">Target Effective Risk Exposure Ratio</span></label><input type="text" inputmode="text" autocomplete="off" class="numfield" id="eStar" value="180"></div>
+    <div><label>目標實質曝險 ERR*（%）<br><span style="opacity:.7">Target Effective Risk Exposure Ratio</span></label><input type="text" inputmode="text" autocomplete="off" class="numfield" id="eStar" value="200"></div>
   </div>
   <div id="clampWarn" class="warnmsg" hidden></div>
   <div class="note">
-    <b>想開幾倍槓桿？</b>以實質曝險 ERR 設定，200% 即 2 倍。投入現金全數買進，目標配置：正二 <code>= ERR*·NAV − I</code>、大盤 <code>= 2I − ERR*·NAV</code>（I = 正二 + 大盤 + 投入現金）。
-    可達範圍 <code>I/NAV ≤ ERR* ≤ 2I/NAV</code>。
+<b>想開幾倍槓桿？</b>200% 即 2 倍。投入現金全數買進，目標配置：正二 <code>= ERR*·NAV − I</code>、大盤 <code>= 2I − ERR*·NAV</code>（I = 正二 + 大盤 + 投入現金）。
+    可達範圍：<code>I/NAV ≤ ERR* ≤ 2I/NAV</code>。
   </div>
 </div>
 
@@ -248,21 +248,21 @@ details.gloss[open] summary::before { transform:rotate(90deg); }
   <div class="steps">
     <div class="step">
       <div class="st-h"><span class="badge">1</span>淨資產 NAV</div>
-      <div class="st-q">扣掉借款後，真正屬於你的錢</div>
+      <div class="st-q">扣掉負債後，真正屬於你的錢</div>
       <div class="st-f"><span class="lab">淨資產 NAV = 總資產 − 負債</span><span id="fNavX"></span></div>
       <div class="st-v" id="fNavV"></div>
     </div>
     <div class="st-arrow">→</div>
     <div class="step">
       <div class="st-h"><span class="badge">2</span>曝險金額</div>
-      <div class="st-q">承受大盤漲跌的部位（正二漲跌是大盤 2 倍，所以算 2 份）</div>
+      <div class="st-q">承受大盤漲跌的部位（正二算 2 份）</div>
       <div class="st-f"><span class="lab">曝險金額 = 正二 × 2 + 大盤 × 1</span><span id="fExpX"></span></div>
       <div class="st-v" id="fExpV"></div>
     </div>
     <div class="st-arrow">→</div>
     <div class="step hl">
       <div class="st-h"><span class="badge">3</span>實質曝險 ERR</div>
-      <div class="st-q">你的淨資產實際承受的波動倍數</div>
+      <div class="st-q">淨資產實際承受的波動倍數</div>
       <div class="st-f"><span class="lab">實質曝險 ERR =</span><span class="frac"><span class="ft">② 曝險金額　<b id="fFT"></b></span><span class="fb">① 淨資產　<b id="fFB"></b></span></span></div>
       <div class="st-v" id="fErrV"></div>
     </div>
@@ -294,21 +294,21 @@ details.gloss[open] summary::before { transform:rotate(90deg); }
   <div class="steps">
     <div class="step">
       <div class="st-h"><span class="badge">1</span>淨資產 NAV</div>
-      <div class="st-q">扣掉借款後，真正屬於你的錢</div>
+      <div class="st-q">扣掉負債後，真正屬於你的錢</div>
       <div class="st-f"><span class="lab">淨資產 NAV = 總資產 − 負債</span><span id="pNavX"></span></div>
       <div class="st-v" id="pNavV"></div>
     </div>
     <div class="st-arrow">→</div>
     <div class="step">
       <div class="st-h"><span class="badge">2</span>曝險金額</div>
-      <div class="st-q">承受大盤漲跌的部位（正二漲跌是大盤 2 倍，所以算 2 份）</div>
+      <div class="st-q">承受大盤漲跌的部位（正二算 2 份）</div>
       <div class="st-f"><span class="lab">曝險金額 = 配置後 正二 × 2 + 大盤 × 1</span><span id="pExpX"></span></div>
       <div class="st-v" id="pExpV"></div>
     </div>
     <div class="st-arrow">→</div>
     <div class="step hl">
       <div class="st-h"><span class="badge">3</span>實質曝險 ERR</div>
-      <div class="st-q">你的淨資產實際承受的波動倍數</div>
+      <div class="st-q">淨資產實際承受的波動倍數</div>
       <div class="st-f"><span class="lab">實質曝險 ERR =</span><span class="frac"><span class="ft">② 曝險金額　<b id="pFT"></b></span><span class="fb">① 淨資產　<b id="pFB"></b></span></span></div>
       <div class="st-v" id="pErrV"></div>
     </div>
@@ -318,13 +318,10 @@ details.gloss[open] summary::before { transform:rotate(90deg); }
 
 <hr>
 <div class="note" style="margin-top:16px">
-  <b>兩種曝險別混用。</b>
-  只看曝險金額會低估風險（忽略負債），ERR 才是淨值實際承受的波動。
-  想降低 ERR，可以賣正二換大盤、提高現金，或還款。<br><br>
-  <b>本表刻意沒算的事</b>（與曝險比例正交，但真實存在）：質押的維持率與追繳／斷頭；
-  信貸的聯徵 DBR 22 倍規範與到期轉貸；利息對淨值的長期侵蝕。<br><br>
-  <b>使用方式</b>：填入緊急預備金、投入現金、預留現金、兩個股票市值與兩筆負債餘額，再設定目標 ERR*。
-  實際下單時把差額除以現價換算張數，不足一張走零股。
+  <b>曝險金額 vs ERR</b>：只看曝險金額會低估風險（忽略負債），ERR 才是淨資產實際承受的波動。
+  降低 ERR：賣正二換大盤、提高預留現金，或還款。<br><br>
+  <b>本表未計</b>：質押維持率與斷頭、信貸 DBR 22 倍規範與到期轉貸、利息對淨值的長期侵蝕。<br><br>
+  <b>使用方式</b>：填入各欄位與目標 ERR*。下單時把差額除以現價換算張數，不足一張用零股。
 </div>
 
 <details class="gloss">
@@ -333,38 +330,38 @@ details.gloss[open] summary::before { transform:rotate(90deg); }
 
   <div class="grp-t">資產與負債 · Balance Sheet</div>
   <div class="gterm"><span class="zh">市值</span> <span class="en">Market Value</span>
-    <p>資產「現在」值多少錢，不是你當初買進的成本。<span class="muted">曝險完全由市值決定，成本價不影響任何計算。</span></p></div>
+    <p>資產現在值多少錢，不是買進成本；成本價不影響計算。</p></div>
   <div class="gterm"><span class="zh">正二 ETF</span> <span class="en">2x Leveraged ETF</span>
     <p>追蹤指數「兩倍」漲跌幅的 ETF（例：台灣50正2）。大盤漲跌 1%，它大約漲跌 2%。</p></div>
   <div class="gterm"><span class="zh">大盤 ETF</span> <span class="en">Market / Index ETF</span>
     <p>追蹤大盤指數本身、不放大波動的 ETF（例：0050）。大盤漲跌 1%，它也漲跌約 1%。</p></div>
   <div class="gterm"><span class="zh">投入現金</span> <span class="en">Cash to Invest</span>
-    <p>準備買進正二或大盤 ETF 的錢（含申請中的貸款），會依目標配置分配。</p></div>
+    <p>準備買進正二或大盤 ETF 的錢（含申請中的貸款）。</p></div>
   <div class="gterm"><span class="zh">預留現金</span> <span class="en">Reserved Cash</span>
-    <p>不拿去買股票的現金，不受大盤漲跌影響，但仍算入總資產與淨值。</p></div>
+    <p>不買股票的現金，不受大盤漲跌影響，但計入總資產與淨值。</p></div>
   <div class="gterm"><span class="zh">緊急預備金</span> <span class="en">Emergency Fund</span>
-    <p>留作生活應急，不參與任何投資計算，也不計入總資產與淨值。</p></div>
+    <p>留作生活應急，不計入總資產、淨值與任何投資計算。</p></div>
   <div class="gterm"><span class="zh">總資產</span> <span class="en">Total Assets</span> <span class="sym">(A)</span>
-    <p>你名下所有資產市值加總：<code>A = 正二 + 大盤 + 現金</code>。</p></div>
+    <p>資產市值加總：<code>A = 正二 + 大盤 + 投入現金 + 預留現金</code>。</p></div>
   <div class="gterm"><span class="zh">淨值</span> <span class="en">Net Asset Value</span> <span class="sym">(NAV)</span>
-    <p>資產扣掉負債後，真正屬於你的錢：<code>NAV = A − 負債</code>。也常叫 <span class="en">Net Worth（身家）</span>。</p></div>
+    <p><code>NAV = A − 負債</code>，扣掉負債後真正屬於你的錢，也叫身家。</p></div>
 
   <div class="grp-t">曝險指標 · Exposure Metrics</div>
   <div class="gterm"><span class="zh">曝險金額</span> <span class="en">Exposure Amount</span>
-    <p>換算成「大盤漲跌 1% 時，你的資產會變動多少錢」的等效金額。正二部位波動是大盤的兩倍，所以要乘以 2 計算：<code>2×正二 + 大盤</code>。</p></div>
+    <p>大盤漲跌 1% 時資產約變動多少錢：<code>2×正二 + 大盤</code>（正二波動是大盤 2 倍）。</p></div>
   <div class="gterm"><span class="zh">實質曝險</span> <span class="en">Effective Risk Exposure Ratio</span> <span class="sym">(ERR = 曝險金額 / 淨資產)</span>
-    <p>你的淨值「實際」承受的波動幅度 —— 大盤漲跌 1%，淨值大約變動 ERR%。<b>最終該看的是這個。</b></p></div>
+    <p>大盤漲跌 1%，淨資產約變動 ERR%。<b>最終該看這個。</b></p></div>
 
   <div class="grp-t">目標 · Target</div>
   <div class="gterm"><span class="zh">目標實質曝險</span> <span class="en">Target ERR</span> <span class="sym">(ERR*)</span>
-    <p>你設定、長期想維持的曝險水位，依自己能承受的波動程度決定，不是算出來的，是你選的。</p></div>
+    <p>你選的長期曝險水位，依自己能承受的波動決定。</p></div>
   <div class="grp-t">本表沒算、但你該知道的風險 · Not Modeled</div>
   <div class="gterm"><span class="zh">維持率</span> <span class="en">Maintenance Ratio</span>
     <p>質押借款常見的風控指標：<code>擔保品市值 / 借款金額</code>。低於銀行規定的比例，會被要求補錢或強制賣出。</p></div>
   <div class="gterm"><span class="zh">斷頭</span> <span class="en">Margin Call / Forced Liquidation</span>
     <p>維持率過低、你又沒補錢時，銀行或券商強制賣掉你的擔保品來償還借款。</p></div>
   <div class="gterm"><span class="zh">DBR 22 倍</span> <span class="en">Debt Burden Ratio</span>
-    <p>台灣信貸法規：銀行核貸信貸與信用卡循環時，月付金不得超過月收入的 22 倍，是總負債的一種法規上限。</p></div>
+    <p>台灣法規：核貸信貸與信用卡循環時，無擔保負債總額不得超過月收入 22 倍。</p></div>
 
 </div>
 </details>
@@ -409,10 +406,10 @@ details.gloss[open] summary::before { transform:rotate(90deg); }
     </g>
   </svg>
   <div class="note">
-    <b>Ayres &amp; Nalebuff（2010）</b> 建議年輕時把股票配置槓桿拉高到 <b>200%</b>（2倍margin），隨財富累積分三階段降槓桿：
-    Stage 1（累積達目標值 0–50%）維持 2x；Stage 2（50–100%）槓桿線性降到 1x；Stage 3（達 100%）完全去槓桿後，股票佔比再緩降到退休時的 <b>83%</b>。
-    這條曲線的 y 軸換算成本頁的符號就是 <code>ERR</code>——200% 是 <code>ERR=2.0</code>，83% 是 <code>ERR=0.83</code>。<br><br>
-    <b>年齡軸是示意值，不是論文原圖</b>：原始模型是照「累積財富達目標值的百分比」分階段，不是直接綁定年齡——轉折點取決於個人儲蓄率與實際市場報酬，牛市會比熊市更快從 Stage 1 進入 Stage 2。上圖是依書中「25歲起、40年投資期、目標83%終身股票配置」的例子畫出的示意曲線。
+    <b>Ayres &amp; Nalebuff（2010）</b> 建議年輕時把股票配置槓桿拉高到 <b>200%</b>（2 倍 margin），隨財富累積分三階段降槓桿：
+    Stage 1（累積達目標值 0–50%）維持 2x；Stage 2（50–100%）線性降到 1x；Stage 3（達 100%）完全去槓桿，股票佔比再緩降到退休時的 <b>83%</b>。
+    y 軸即本頁的 <code>ERR</code>：200% = 2.0，83% = 0.83。<br><br>
+    <b>年齡軸是示意值，不是論文原圖</b>：原模型依「累積財富達目標值的百分比」分階段，不綁定年齡，轉折點取決於個人儲蓄率與市場報酬。上圖依書中「25 歲起、40 年投資期、目標 83% 終身股票配置」的例子繪製。
   </div>
   <ul class="reflist">
     <li><a href="https://spinup-000d1a-wp-offload-media.s3.amazonaws.com/faculty/wp-content/uploads/sites/8/2019/06/LifecycleInvestingLeverage_v2008.pdf" target="_blank" rel="noopener">Ayres &amp; Nalebuff — Life-Cycle Investing and Leverage（NBER Working Paper）</a></li>
