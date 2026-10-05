@@ -179,12 +179,12 @@ details.gloss[open] summary::before { transform:rotate(90deg); }
     <colgroup><col style="width:34%"><col style="width:12%"><col style="width:20%"><col style="width:12%"><col style="width:22%"></colgroup>
     <thead><tr><th>欄位（萬元）</th><th>角色</th><th>① 借款前</th><th></th><th>② 借款後</th></tr></thead>
     <tbody>
-      <tr><td>緊急預備金</td><td><span class="tg tg-op">操作</span></td><td>20</td><td style="text-align:center;color:var(--accent);font-weight:700">→</td><td>50</td></tr>
-      <tr><td>投入現金</td><td><span class="tg tg-op">操作</span></td><td>10</td><td style="text-align:center;color:var(--accent);font-weight:700">→</td><td>85<span class="flat" style="font-weight:400;font-size:12px">（含貸款撥款 150）</span></td></tr>
-      <tr><td>預留現金</td><td><span class="tg tg-op">操作</span></td><td>10</td><td style="text-align:center;color:var(--accent);font-weight:700">→</td><td>55</td></tr>
+      <tr><td>緊急預備金</td><td><span class="tg tg-op">操作</span></td><td>20</td><td style="text-align:center;color:var(--accent);font-weight:700">→</td><td>20+30</td></tr>
+      <tr><td>投入現金</td><td><span class="tg tg-op">操作</span></td><td>10</td><td style="text-align:center;color:var(--accent);font-weight:700">→</td><td>10+75</td></tr>
+      <tr><td>預留現金</td><td><span class="tg tg-op">操作</span></td><td>10</td><td style="text-align:center;color:var(--accent);font-weight:700">→</td><td>10+45</td></tr>
       <tr><td>大盤正二 ETF 市值</td><td><span class="tg tg-ct">控制</span></td><td>15</td><td style="text-align:center;color:var(--accent);font-weight:700">→</td><td>15</td></tr>
       <tr><td>大盤 ETF（0050）市值</td><td><span class="tg tg-ct">控制</span></td><td>100</td><td style="text-align:center;color:var(--accent);font-weight:700">→</td><td>100</td></tr>
-      <tr><td>信貸餘額</td><td><span class="tg tg-op">操作</span></td><td>0</td><td style="text-align:center;color:var(--accent);font-weight:700">→</td><td>150<span class="flat" style="font-weight:400;font-size:12px">（信貸撥款 +150）</span></td></tr>
+      <tr><td>信貸餘額</td><td><span class="tg tg-op">操作</span></td><td>0</td><td style="text-align:center;color:var(--accent);font-weight:700">→</td><td>−150</td></tr>
       <tr><td>質押借款餘額</td><td><span class="tg tg-op">操作</span></td><td>0</td><td style="text-align:center;color:var(--accent);font-weight:700">→</td><td>0</td></tr>
       <tr><td>目標實質曝險 ERR*</td><td><span class="tg tg-op">操作</span></td><td>—</td><td style="text-align:center;color:var(--accent);font-weight:700">→</td><td>200%</td></tr>
       <tr style="font-weight:650"><td>→ 淨資產 NAV</td><td><span class="tg tg-rs">應變</span></td><td class="">135</td><td style="text-align:center;color:var(--accent);font-weight:700">→</td><td style="color:var(--accent)">105</td></tr>
@@ -617,7 +617,7 @@ IDS.forEach(id=>{
 });
 const EXAMPLES = [
   {cash:10, reserve:10, emerg:20, valL:15, valU:100, loanP:0, loanQ:0, eStar:200},
-  {cash:85, reserve:55, emerg:50, valL:15, valU:100, loanP:150, loanQ:0, eStar:200},
+  {cash:'10+75', reserve:'10+45', emerg:'20+30', valL:15, valU:100, loanP:150, loanQ:0, eStar:200},
 ];
 document.querySelectorAll('.exbtn').forEach(btn=>{
   btn.addEventListener('click',()=>{
