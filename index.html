@@ -163,7 +163,8 @@ details.gloss[open] summary::before { transform:rotate(90deg); }
 <h2>範例：小明怎麼填 <span style="font-weight:400;color:var(--muted);font-size:11px">Example</span></h2>
 <div class="card">
   <div class="note" style="margin-top:0">
-    小明有 10 萬現金（全部拿來投資）、20 萬預備金，身上有 15 萬正二與 100 萬 0050。某天他借了信貸 200 萬，把預備金提高到 50 萬，再自備 105 萬，其餘現金全部拿去投資，
+    小明有 10 萬投入現金、10 萬預留現金、20 萬緊急預備金，持有 15 萬正二與 100 萬 0050，另有信貸 20 萬、質押借款 10 萬。
+    某天他再借信貸 30 萬、質押 10 萬（共 40 萬），把緊急預備金提高到 50 萬、預留現金提高到 20 萬，其餘全部拿去投資，
     目標實質曝險拉到 <a href="#lifecycle" style="color:var(--accent)">生命週期投資參考</a>中的 <b>200%</b>。按下按鈕自動帶入：
   </div>
   <div class="tw"><table class="extbl">
@@ -171,23 +172,21 @@ details.gloss[open] summary::before { transform:rotate(90deg); }
     <thead><tr><th>欄位（萬元）</th><th>① 借款前</th><th></th><th>② 借款後</th></tr></thead>
     <tbody>
       <tr><td>緊急預備金</td><td>20</td><td style="text-align:center;color:var(--accent);font-weight:700">→</td><td>50</td></tr>
-      <tr><td>投入現金</td><td>10</td><td style="text-align:center;color:var(--accent);font-weight:700">→</td><td>285</td></tr>
-      <tr><td>預留現金</td><td>0</td><td style="text-align:center;color:var(--accent);font-weight:700">→</td><td>0</td></tr>
+      <tr><td>投入現金</td><td>10</td><td style="text-align:center;color:var(--accent);font-weight:700">→</td><td>10</td></tr>
+      <tr><td>預留現金</td><td>10</td><td style="text-align:center;color:var(--accent);font-weight:700">→</td><td>20</td></tr>
       <tr><td>大盤正二 ETF 市值</td><td>15</td><td style="text-align:center;color:var(--accent);font-weight:700">→</td><td>15</td></tr>
       <tr><td>大盤 ETF（0050）市值</td><td>100</td><td style="text-align:center;color:var(--accent);font-weight:700">→</td><td>100</td></tr>
-      <tr><td>信貸餘額</td><td>0</td><td style="text-align:center;color:var(--accent);font-weight:700">→</td><td>200</td></tr>
-      <tr><td>質押借款餘額</td><td>0</td><td style="text-align:center;color:var(--accent);font-weight:700">→</td><td>0</td></tr>
+      <tr><td>信貸餘額</td><td>20</td><td style="text-align:center;color:var(--accent);font-weight:700">→</td><td>50</td></tr>
+      <tr><td>質押借款餘額</td><td>10</td><td style="text-align:center;color:var(--accent);font-weight:700">→</td><td>20</td></tr>
       <tr><td>目標實質曝險 ERR*</td><td>—</td><td style="text-align:center;color:var(--accent);font-weight:700">→</td><td>200%</td></tr>
-      <tr style="font-weight:650"><td>→ 算出目標正二市值</td><td class="flat">—</td><td style="text-align:center;color:var(--accent);font-weight:700">→</td><td style="color:var(--accent)">0</td></tr>
-      <tr style="font-weight:650"><td>→ 算出目標 0050 市值</td><td class="flat">—</td><td style="text-align:center;color:var(--accent);font-weight:700">→</td><td style="color:var(--accent)">400</td></tr>
+      <tr style="font-weight:650"><td>→ 算出目標正二市值</td><td class="flat">—</td><td style="text-align:center;color:var(--accent);font-weight:700">→</td><td style="color:var(--accent)">25</td></tr>
+      <tr style="font-weight:650"><td>→ 算出目標 0050 市值</td><td class="flat">—</td><td style="text-align:center;color:var(--accent);font-weight:700">→</td><td style="color:var(--accent)">100</td></tr>
       <tr><td></td><td><button type="button" class="exbtn" data-ex="0">帶入 ①</button></td><td style="text-align:center;color:var(--accent);font-weight:700">→</td><td><button type="button" class="exbtn" data-ex="1">帶入 ②</button></td></tr>
     </tbody>
 </table></div>
   <div class="note">
-    ② 的投入現金 285 = 原現金 10 + 借款 200 − 補足預備金 30（20 → 50）+ 自備再投入 105。
-    ERR 的上限是 2 × 總資產 / 淨資產，所以要達到 ERR* = 200%，總資產不能超過淨資產的 2 倍，
-    也就是正二 + 大盤 + 現金 ≥ 400 萬（借款 200 時），小明得再補 105 萬。<br>
-    <b>結果</b>：② 的總資產 400 萬、NAV 200 萬，ERR* = 200% 剛好是可達上限。目標配置為全 0050：賣出正二 15 萬、0050 買到 400 萬（買進 300 萬）。
+    ② 的投入現金 10 = 原投入現金 10 + 借款 40 − 補足緊急預備金 30（20 → 50）− 補足預留現金 10（10 → 20）。<br>
+    <b>結果</b>：② 的總資產 145 萬、負債 70 萬、NAV 75 萬，目前 ERR = 130 ÷ 75 ≈ 173%。要拉到 200%，目標配置是正二 25 萬、0050 100 萬：買進正二 10 萬，用掉全部投入現金，買完後 ERR = (25×2 + 100) ÷ 75 = 200%。
   </div>
 </div>
 
@@ -607,8 +606,8 @@ IDS.forEach(id=>{
   el.addEventListener('blur',()=>{ normalizeField(id); saveState(); calc(); });
 });
 const EXAMPLES = [
-  {cash:10, reserve:0, emerg:20, valL:15, valU:100, loanP:0,   loanQ:0, eStar:200},
-  {cash:285,reserve:0, emerg:50, valL:15, valU:100, loanP:200, loanQ:0, eStar:200},
+  {cash:10, reserve:10, emerg:20, valL:15, valU:100, loanP:20, loanQ:10, eStar:200},
+  {cash:10, reserve:20, emerg:50, valL:15, valU:100, loanP:50, loanQ:20, eStar:200},
 ];
 document.querySelectorAll('.exbtn').forEach(btn=>{
   btn.addEventListener('click',()=>{
