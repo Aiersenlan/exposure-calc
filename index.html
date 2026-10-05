@@ -168,7 +168,7 @@ details.gloss[open] summary::before { transform:rotate(90deg); }
 <div class="wrap">
 
 <h1>曝險計算機</h1>
-<p class="sub">淨資產 NAV = 總資產 − 負債 ‧ 實質曝險 ERR = 名目曝險 ÷ 淨資產</p>
+<p class="sub">淨資產 NAV = 總資產 − 負債 ‧ 實質曝險 ERR = 市場曝險 ÷ 淨資產</p>
 
 <h2>範例：小明怎麼填 <span style="font-weight:400;color:var(--muted);font-size:11px">Example</span></h2>
 <div class="card">
@@ -259,16 +259,16 @@ details.gloss[open] summary::before { transform:rotate(90deg); }
     </div>
     <div class="st-arrow">→</div>
     <div class="step">
-      <div class="st-h"><span class="badge">2</span>名目曝險</div>
+      <div class="st-h"><span class="badge">2</span>市場曝險</div>
       <div class="st-q">承受市場指數漲跌的部位（槓桿型 ETF 算 2 份）</div>
-      <div class="st-f"><span class="lab">名目曝險 = 槓桿型 ETF × 2 + 指數型 ETF × 1</span><span id="fExpX"></span></div>
+      <div class="st-f"><span class="lab">市場曝險 = 槓桿型 ETF × 2 + 指數型 ETF × 1</span><span id="fExpX"></span></div>
       <div class="st-v" id="fExpV"></div>
     </div>
     <div class="st-arrow">→</div>
     <div class="step hl">
       <div class="st-h"><span class="badge">3</span>實質曝險 ERR</div>
       <div class="st-q">淨資產實際承受的波動倍數</div>
-      <div class="st-f"><span class="lab">實質曝險 ERR =</span><span class="frac"><span class="ft">② 名目曝險　<b id="fFT"></b></span><span class="fb">① 淨資產　<b id="fFB"></b></span></span></div>
+      <div class="st-f"><span class="lab">實質曝險 ERR =</span><span class="frac"><span class="ft">② 市場曝險　<b id="fFT"></b></span><span class="fb">① 淨資產　<b id="fFB"></b></span></span></div>
       <div class="st-v" id="fErrV"></div>
     </div>
   </div>
@@ -305,16 +305,16 @@ details.gloss[open] summary::before { transform:rotate(90deg); }
     </div>
     <div class="st-arrow">→</div>
     <div class="step">
-      <div class="st-h"><span class="badge">2</span>名目曝險</div>
+      <div class="st-h"><span class="badge">2</span>市場曝險</div>
       <div class="st-q">承受市場指數漲跌的部位（槓桿型 ETF 算 2 份）</div>
-      <div class="st-f"><span class="lab">名目曝險 = 配置後 槓桿型 ETF × 2 + 指數型 ETF × 1</span><span id="pExpX"></span></div>
+      <div class="st-f"><span class="lab">市場曝險 = 配置後 槓桿型 ETF × 2 + 指數型 ETF × 1</span><span id="pExpX"></span></div>
       <div class="st-v" id="pExpV"></div>
     </div>
     <div class="st-arrow">→</div>
     <div class="step hl">
       <div class="st-h"><span class="badge">3</span>實質曝險 ERR</div>
       <div class="st-q">淨資產實際承受的波動倍數</div>
-      <div class="st-f"><span class="lab">實質曝險 ERR =</span><span class="frac"><span class="ft">② 名目曝險　<b id="pFT"></b></span><span class="fb">① 淨資產　<b id="pFB"></b></span></span></div>
+      <div class="st-f"><span class="lab">實質曝險 ERR =</span><span class="frac"><span class="ft">② 市場曝險　<b id="pFT"></b></span><span class="fb">① 淨資產　<b id="pFB"></b></span></span></div>
       <div class="st-v" id="pErrV"></div>
     </div>
   </div>
@@ -323,7 +323,7 @@ details.gloss[open] summary::before { transform:rotate(90deg); }
 
 <hr>
 <div class="note" style="margin-top:16px">
-  <b>名目曝險 vs ERR</b>：只看名目曝險會低估風險（忽略負債），ERR 才是淨資產實際承受的波動。
+  <b>市場曝險 vs ERR</b>：只看市場曝險會低估風險（忽略負債），ERR 才是淨資產實際承受的波動。
   降低 ERR：賣槓桿型換指數型、提高預留現金，或還款。<br><br>
   <b>本表未計</b>：質押擔保維持率與強制平倉、無擔保貸款 DBR 22 倍規範與到期轉貸、利息對淨資產的長期侵蝕。<br><br>
   <b>使用方式</b>：填入各欄位與目標 ERR*。下單時把差額除以現價換算張數，不足一張以零股交易。
@@ -352,9 +352,9 @@ details.gloss[open] summary::before { transform:rotate(90deg); }
     <p><code>NAV = A − 負債</code>，扣掉負債後屬於投資人的剩餘價值。</p></div>
 
   <div class="grp-t">曝險指標 · Exposure Metrics</div>
-  <div class="gterm"><span class="zh">名目曝險</span> <span class="en">Notional Exposure</span>
+  <div class="gterm"><span class="zh">市場曝險</span> <span class="en">Market Exposure</span>
     <p>市場指數漲跌 1% 時資產約變動多少錢：<code>2×槓桿型 ETF + 指數型 ETF</code>（槓桿型 ETF 波動是指數型 ETF 2 倍）。</p></div>
-  <div class="gterm"><span class="zh">實質曝險</span> <span class="en">Effective Risk Exposure Ratio</span> <span class="sym">(ERR = 名目曝險 / 淨資產)</span>
+  <div class="gterm"><span class="zh">實質曝險</span> <span class="en">Effective Risk Exposure Ratio</span> <span class="sym">(ERR = 市場曝險 / 淨資產)</span>
     <p>市場指數漲跌 1%，淨資產約變動 ERR%。<b>最終該看這個。</b></p></div>
 
   <div class="grp-t">目標 · Target</div>
@@ -569,7 +569,7 @@ function calc(){
   const k = solvent ? (A-R)/NAV : Infinity;     // 可投資資產 I / 淨資產（僅用於配置）
   const l = solvent ? L/NAV : 0, u = solvent ? U/NAV : 0;
 
-  // --- 淨資產、名目曝險、實質曝險 ---
+  // --- 淨資產、市場曝險、實質曝險 ---
   $('fNavX').textContent = `${wan(A)} − ${wan(DEBT)}`;
   $('fNavV').textContent = wan(NAV);
   $('fExpX').textContent = `${wan(L)} × 2 + ${wan(U)} × 1`;
