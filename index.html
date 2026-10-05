@@ -289,6 +289,33 @@ details.gloss[open] summary::before { transform:rotate(90deg); }
   </table>
 </div><div class="note" id="costNote"></div></div>
 
+<h2>配置後曝險 <span style="font-weight:400;color:var(--muted);font-size:11px">Post-Allocation Exposure</span></h2>
+<div class="card">
+  <div class="steps">
+    <div class="step">
+      <div class="st-h"><span class="badge">1</span>淨資產 NAV</div>
+      <div class="st-q">扣掉借款後，真正屬於你的錢</div>
+      <div class="st-f"><span class="lab">淨資產 NAV = 總資產 − 負債</span><span id="pNavX"></span></div>
+      <div class="st-v" id="pNavV"></div>
+    </div>
+    <div class="st-arrow">→</div>
+    <div class="step">
+      <div class="st-h"><span class="badge">2</span>曝險金額</div>
+      <div class="st-q">承受大盤漲跌的部位（正二漲跌是大盤 2 倍，所以算 2 份）</div>
+      <div class="st-f"><span class="lab">曝險金額 = 配置後 正二 × 2 + 大盤 × 1</span><span id="pExpX"></span></div>
+      <div class="st-v" id="pExpV"></div>
+    </div>
+    <div class="st-arrow">→</div>
+    <div class="step hl">
+      <div class="st-h"><span class="badge">3</span>實質曝險 ERR</div>
+      <div class="st-q">你的淨資產實際承受的波動倍數</div>
+      <div class="st-f"><span class="lab">實質曝險 ERR =</span><span class="frac"><span class="ft">② 曝險金額　<b id="pFT"></b></span><span class="fb">① 淨資產　<b id="pFB"></b></span></span></div>
+      <div class="st-v" id="pErrV"></div>
+    </div>
+  </div>
+  <div class="st-sum" id="pSum"></div>
+</div>
+
 <hr>
 <div class="note" style="margin-top:16px">
   <b>兩種曝險別混用。</b>
@@ -565,6 +592,7 @@ function calc(){
     ['trades'].forEach(k=>$(k).innerHTML='');
     $('costNote').textContent=''; $('clampWarn').hidden=true;
     drawBar($('barNow'),0,0,0,0); drawBar($('barTgt'),0,0,0,0);
+    ['pNavX','pNavV','pExpX','pExpV','pFT','pFB','pErrV','pSum'].forEach(k=>$(k).textContent='');
     return;
   }
 
@@ -603,6 +631,18 @@ function calc(){
   $('costNote').innerHTML = cost>0
     ? `估計交易成本 <b>${money(cost)} 元</b>（手續費 0.1425%×${FEE_DISC*10}折、最低 20 元；ETF 賣出證交稅 0.1%）＝ 淨值的 ${pct(cost/NAV,3)}。`
     : '目前無需交易。';
+
+  // --- 配置後曝險（依目標配置買賣後）---
+  const expAfter=2*tL+tU, Ea=expAfter/NAV;
+  $('pNavX').textContent = `${wan(A)} − ${wan(DEBT)}`;
+  $('pNavV').textContent = wan(NAV);
+  $('pExpX').textContent = `${wan(tL)} × 2 + ${wan(tU)} × 1`;
+  $('pExpV').textContent = wan(expAfter);
+  $('pFT').textContent = wan(expAfter);
+  $('pFB').textContent = wan(NAV);
+  $('pErrV').textContent = pct(Ea);
+  $('pErrV').style.color = Ea>2.5 ? 'var(--warn)' : '';
+  $('pSum').innerHTML = `依目標配置買賣後，大盤漲或跌 1%，你的淨資產大約漲或跌 <b>${Ea.toFixed(2)}%</b>。`;
 }
 
 IDS.forEach(id=>{
