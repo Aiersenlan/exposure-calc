@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>曝險計算機 — 市場曝險 × 財務槓桿</title>
+<title>曝險計算機 — 淨資產與實質曝險</title>
 <style>
 :root {
   --bg:#fff; --panel:#f6f7f9; --panel-2:#eceef1; --text:#1a1c1f; --muted:#6b7280;
@@ -54,7 +54,7 @@ input.numfield{ width:100%; padding:9px 10px; font-size:15px; font-variant-numer
 input.numfield:focus{ border-color:var(--accent); }
 .unit { font-size:11.5px; color:var(--muted); margin-top:3px; font-variant-numeric:tabular-nums; }
 
-.hero { display:grid; grid-template-columns:repeat(3,1fr); gap:1px; background:var(--line);
+.hero { display:grid; grid-template-columns:repeat(4,1fr); gap:1px; background:var(--line);
   border:1px solid var(--line); border-radius:10px; overflow:hidden; }
 @media (max-width:640px){ .hero { grid-template-columns:1fr 1fr; } }
 .hero > div { background:var(--panel); padding:14px; }
@@ -73,7 +73,6 @@ input.numfield:focus{ border-color:var(--accent); }
 .eq .term .b { font-size:26px; font-weight:650; letter-spacing:-.02em; }
 .eq .term .s { font-size:11px; color:var(--muted); }
 .eq .op { font-size:20px; color:var(--muted); font-weight:300; padding-bottom:6px; }
-.eq .term.m .b { color:var(--mk); } .eq .term.g .b { color:var(--lv); }
 
 .tw { overflow-x:auto; -webkit-overflow-scrolling:touch; }
 table { width:100%; border-collapse:collapse; font-variant-numeric:tabular-nums; }
@@ -83,7 +82,6 @@ th:first-child, td:first-child { text-align:left; }
 tbody tr:last-child td { border-bottom:none; }
 tr.brk td { background:var(--danger-bg); }
 .buy{color:var(--buy);font-weight:600} .sell{color:var(--sell);font-weight:600} .flat{color:var(--muted)}
-.cm{color:var(--mk)} .cg{color:var(--lv)}
 
 .banner { border-radius:9px; padding:13px 15px; margin:14px 0 0; font-size:14px; border:1px solid transparent; }
 .banner.act { background:var(--warn-bg); color:var(--warn); border-color:currentColor; }
@@ -135,13 +133,13 @@ details.gloss[open] summary::before { transform:rotate(90deg); }
 <div class="wrap">
 
 <h1>曝險計算機</h1>
-<p class="sub">市場曝險 (Market Exposure) × 財務槓桿 (Financial Leverage) ‧ 正二 + 大盤 + 現金 + 信貸 + 質押</p>
+<p class="sub">淨資產 NAV = 總資產 A − 負債 ‧ 實質曝險 ERR = 曝險金額 / 淨資產 ‧ 正二 + 大盤 + 現金 + 信貸 + 質押</p>
 
 <h2>範例：小明怎麼填 <span style="font-weight:400;color:var(--muted);font-size:11px">Example</span></h2>
 <div class="card">
   <div class="note" style="margin-top:0">
     小明有 10 萬現金、20 萬預備金，身上有 15 萬正二與 100 萬 0050。某天他借了信貸 200 萬，把預備金提高到 50 萬，再自備 105 萬，其餘現金全部拿去投資，
-    目標曝險拉到 <a href="#lifecycle" style="color:var(--accent)">生命週期投資參考</a>中的 <b>200%</b>。按下按鈕自動帶入：
+    目標實質曝險拉到 <a href="#lifecycle" style="color:var(--accent)">生命週期投資參考</a>中的 <b>200%</b>。按下按鈕自動帶入：
   </div>
   <div class="tw"><table>
     <thead><tr><th>欄位（萬元）</th><th>① 借款前</th><th></th><th>② 借款後</th></tr></thead>
@@ -152,7 +150,7 @@ details.gloss[open] summary::before { transform:rotate(90deg); }
       <tr><td>大盤 ETF（0050）市值</td><td>100</td><td style="text-align:center;color:var(--accent);font-weight:700">→</td><td>100</td></tr>
       <tr><td>信貸餘額</td><td>0</td><td style="text-align:center;color:var(--accent);font-weight:700">→</td><td>200</td></tr>
       <tr><td>質押借款餘額</td><td>0</td><td style="text-align:center;color:var(--accent);font-weight:700">→</td><td>0</td></tr>
-      <tr><td>目標股票組合曝險 E*</td><td>200%</td><td style="text-align:center;color:var(--accent);font-weight:700">→</td><td>200%</td></tr>
+      <tr><td>目標實質曝險 ERR*</td><td>200%</td><td style="text-align:center;color:var(--accent);font-weight:700">→</td><td>200%</td></tr>
       <tr><td></td>
         <td><button type="button" class="exbtn" data-ex="0">帶入 ①</button></td><td style="text-align:center;color:var(--accent);font-weight:700">→</td>
         <td><button type="button" class="exbtn" data-ex="1">帶入 ②</button></td></tr>
@@ -160,8 +158,9 @@ details.gloss[open] summary::before { transform:rotate(90deg); }
   </table></div>
   <div class="note">
     ② 的現金 285 = 原現金 10 + 借款 200 − 補足預備金 30（20 → 50）+ 自備再投入 105。
-    借款固定 200 時，達到 E* = 200% 要求 g ≤ 2，也就是正二 + 大盤 + 現金 ≥ 400 萬，所以小明得再補 105 萬。<br>
-    <b>結果</b>：② 的 g = 2.00，E* = 200% 剛好是可達上限。目標配置為全 0050：賣出正二 15 萬、0050 買到 400 萬（買進 300 萬）。
+    ERR 的上限是 2 × 總資產 / 淨資產，所以要達到 ERR* = 200%，總資產不能超過淨資產的 2 倍，
+    也就是正二 + 大盤 + 現金 ≥ 400 萬（借款 200 時），小明得再補 105 萬。<br>
+    <b>結果</b>：② 的總資產 400 萬、NAV 200 萬，ERR* = 200% 剛好是可達上限。目標配置為全 0050：賣出正二 15 萬、0050 買到 400 萬（買進 300 萬）。
   </div>
 </div>
 
@@ -197,19 +196,19 @@ details.gloss[open] summary::before { transform:rotate(90deg); }
   </div>
   <div class="note">
     只需要<b>餘額</b>。利率與利息不進槓桿公式 —— 曝險是資產負債表的快照，利息是現金流項目。
-    利息從投資現金付會讓 C 下降（g、m 微升），從薪資付則完全不動；兩者都在你下季重填數字時自動反映。
+    利息從投資現金付會讓現金下降（NAV 縮小、ERR 微升），從薪資付則完全不動；兩者都在你下季重填數字時自動反映。
   </div>
 </div>
 
 <h2>目標政策 <span style="font-weight:400;color:var(--muted);font-size:11px">Target Policy</span></h2>
 <div class="card">
   <div class="grid">
-    <div><label>目標股票組合曝險 E*（%）<br><span style="opacity:.7">Target Stock Portfolio Exposure</span></label><input type="text" inputmode="text" autocomplete="off" class="numfield" id="eStar" value="180"></div>
+    <div><label>目標實質曝險 ERR*（%）<br><span style="opacity:.7">Target Effective Risk Exposure Ratio</span></label><input type="text" inputmode="text" autocomplete="off" class="numfield" id="eStar" value="180"></div>
   </div>
   <div id="clampWarn" class="warnmsg" hidden></div>
   <div class="note">
-    目標以<b>股票組合曝險 E</b> 設定（淨值層級，決定你的實際波動）。現金全數投入，目標配置（佔淨值）：正二 <code>= E* − g</code>、大盤 <code>= 2g − E*</code>。
-    可達範圍 <code>g ≤ E* ≤ 2g</code>。
+    目標以<b>實質曝險 ERR</b> 設定（淨值層級，決定你的實際波動）。現金全數投入，目標配置：正二 <code>= ERR*·NAV − A</code>、大盤 <code>= 2A − ERR*·NAV</code>。
+    可達範圍 <code>A/NAV ≤ ERR* ≤ 2A/NAV</code>。
   </div>
 </div>
 
@@ -218,27 +217,21 @@ details.gloss[open] summary::before { transform:rotate(90deg); }
   <div><div class="k">總資產 A<span class="en">Total Assets</span></div><div class="v" id="oA">—</div><div class="n" id="oAN"></div></div>
   <div><div class="k">淨值 NAV<span class="en">Net Asset Value</span></div><div class="v" id="oNav">—</div><div class="n" id="oNavN"></div></div>
   <div><div class="k">股票曝險金額<span class="en">Stock Exposure Amount</span></div><div class="v ex" id="oExp">—</div><div class="n" id="oExpN"></div></div>
-  <div><div class="k">市場曝險 m<span class="en">Market Exposure</span></div><div class="v mk" id="oM">—</div><div class="n" id="oMN"></div></div>
-  <div><div class="k">財務槓桿 g<span class="en">Financial Leverage</span></div><div class="v lv" id="oG">—</div><div class="n" id="oGN"></div></div>
-  <div><div class="k">股票組合曝險 E<span class="en">Stock Portfolio Exposure</span></div><div class="v" id="oE">—</div><div class="n" id="oEN"></div></div>
+  <div><div class="k">實質曝險 ERR<span class="en">Effective Risk Exposure Ratio</span></div><div class="v" id="oE">—</div><div class="n" id="oEN"></div></div>
 </div>
 
 <div class="card" style="margin-top:14px">
   <div class="eq">
-    <div class="term m"><div class="t">市場曝險 m<br><span style="opacity:.75">Market Exposure</span></div><div class="b" id="eqM">—</div><div class="s" id="eqMS"></div></div>
-    <div class="op">×</div>
-    <div class="term g"><div class="t">財務槓桿 g<br><span style="opacity:.75">Financial Leverage</span></div><div class="b" id="eqG">—</div><div class="s" id="eqGS"></div></div>
-    <div class="op">=</div>
-    <div class="term"><div class="t">股票組合曝險 E<br><span style="opacity:.75">Stock Portfolio Exposure</span></div><div class="b" id="eqE">—</div><div class="s" id="eqES"></div></div>
+    <div class="term"><div class="t">淨資產 NAV</div><div class="b" id="eqN">—</div><div class="s" id="eqNS"></div></div>
+    <div class="op">→</div>
+    <div class="term"><div class="t">實質曝險 ERR<br><span style="opacity:.75">曝險金額 / 淨資產</span></div><div class="b" id="eqE">—</div><div class="s" id="eqES"></div></div>
   </div>
   <div class="tw"><table>
-    <thead><tr><th>項目</th><th>市值</th><th>曝險權重</th><th>曝險金額</th><th>貢獻 m</th><th>貢獻 E</th></tr></thead>
+    <thead><tr><th>項目</th><th>市值</th><th>曝險權重</th><th>曝險金額</th><th>貢獻 ERR</th></tr></thead>
     <tbody id="decomp"></tbody>
   </table></div>
   <div class="note">
-    <b>m</b> 是資產側：每 100 元資產有多少在承受市場波動。現金拉低它、正二拉高它，上限 200%。<br>
-    <b>g</b> 是負債側：借款把部位放大幾倍。無負債 = 1.00。<br>
-    <b>E</b> 才是你真正承受的：大盤漲跌 1%，淨值變動 E%。大盤跌 <span id="ruinPct">—</span> 淨值歸零。
+    <b>ERR</b> 是你真正承受的：大盤漲跌 1%，淨值變動 ERR%。大盤跌 <span id="ruinPct">—</span> 淨值歸零。
   </div>
 </div>
 
@@ -272,12 +265,11 @@ details.gloss[open] summary::before { transform:rotate(90deg); }
 <hr>
 <div class="note" style="margin-top:16px">
   <b>兩種曝險別混用。</b>
-  只看 m 會低估風險（忽略負債）；只看 E 會看不出風險來自哪一側。
-  想降低 E，你有兩個獨立的旋鈕：降 m（賣正二換大盤、或提高現金）或降 g（還款）。
-  崩盤時 g 會自己往上跑，這時唯一能主動壓的是 m。<br><br>
+  只看曝險金額會低估風險（忽略負債），ERR 才是淨值實際承受的波動。
+  想降低 ERR，可以賣正二換大盤、提高現金，或還款。<br><br>
   <b>本表刻意沒算的事</b>（與曝險比例正交，但真實存在）：質押的維持率與追繳／斷頭；
   信貸的聯徵 DBR 22 倍規範與到期轉貸；利息對淨值的長期侵蝕。<br><br>
-  <b>使用方式</b>：填入想投入的現金、緊急預備金、兩個股票市值與兩筆負債餘額，再設定目標 E*。
+  <b>使用方式</b>：填入想投入的現金、緊急預備金、兩個股票市值與兩筆負債餘額，再設定目標 ERR*。
   實際下單時把差額除以現價換算張數，不足一張走零股。
 </div>
 
@@ -305,18 +297,14 @@ details.gloss[open] summary::before { transform:rotate(90deg); }
   <div class="gterm"><span class="zh">淨值</span> <span class="en">Net Asset Value</span> <span class="sym">(NAV)</span>
     <p>資產扣掉負債後，真正屬於你的錢：<code>NAV = A − 負債</code>。也常叫 <span class="en">Net Worth（身家）</span>。</p></div>
 
-  <div class="grp-t">曝險三指標 · Exposure Metrics</div>
+  <div class="grp-t">曝險指標 · Exposure Metrics</div>
   <div class="gterm"><span class="zh">曝險金額</span> <span class="en">Exposure Amount</span>
     <p>換算成「大盤漲跌 1% 時，你的資產會變動多少錢」的等效金額。正二部位波動是大盤的兩倍，所以要乘以 2 計算：<code>2×正二 + 大盤</code>。</p></div>
-  <div class="gterm"><span class="zh">市場曝險</span> <span class="en">Market Exposure</span> <span class="sym">(m)</span>
-    <p>每 100 元「資產」中有多少元在承受市場波動，是<b>資產面</b>的角度。現金拉低它、正二拉高它，理論上限 200%。</p></div>
-  <div class="gterm"><span class="zh">財務槓桿</span> <span class="en">Financial Leverage</span> <span class="sym">(g)</span>
-    <p>總資產是淨值的幾倍，反映負債把部位放大了多少倍，是<b>負債面</b>的角度。<code>g = 1.00</code> 代表完全沒借錢。</p></div>
-  <div class="gterm"><span class="zh">股票組合曝險</span> <span class="en">Stock Portfolio Exposure</span> <span class="sym">(E = m × g)</span>
-    <p>你的淨值「實際」承受的波動幅度 —— 大盤漲跌 1%，淨值大約變動 E%。<b>三個指標中最終該看的是這個。</b></p></div>
+  <div class="gterm"><span class="zh">實質曝險</span> <span class="en">Effective Risk Exposure Ratio</span> <span class="sym">(ERR = 曝險金額 / 淨資產)</span>
+    <p>你的淨值「實際」承受的波動幅度 —— 大盤漲跌 1%，淨值大約變動 ERR%。<b>最終該看的是這個。</b></p></div>
 
   <div class="grp-t">目標 · Target</div>
-  <div class="gterm"><span class="zh">目標股票組合曝險</span> <span class="en">Target Stock Portfolio Exposure</span> <span class="sym">(E*)</span>
+  <div class="gterm"><span class="zh">目標實質曝險</span> <span class="en">Target ERR</span> <span class="sym">(ERR*)</span>
     <p>你設定、長期想維持的曝險水位，依自己能承受的波動程度決定，不是算出來的，是你選的。</p></div>
   <div class="grp-t">本表沒算、但你該知道的風險 · Not Modeled</div>
   <div class="gterm"><span class="zh">維持率</span> <span class="en">Maintenance Ratio</span>
@@ -354,7 +342,7 @@ details.gloss[open] summary::before { transform:rotate(90deg); }
       <text x="680" y="278">65歲</text>
     </g>
     <line x1="50" y1="141.8" x2="680" y2="141.8" stroke="var(--muted)" stroke-width="1" stroke-dasharray="3 4"></line>
-    <text x="55" y="136" font-size="10.5">無槓桿線（g=1）</text>
+    <text x="55" y="136" font-size="10.5">無槓桿線（ERR=100%）</text>
     <path d="M50,23.6 L128.8,23.6 L207.5,23.6 L286.3,62.6 L365,102.8 L443.8,141.8 L522.5,148.9 L601.3,154.9 L680,161.9 L680,260 L50,260 Z" fill="var(--ex)" opacity="0.12"></path>
     <polyline points="50,23.6 128.8,23.6 207.5,23.6 286.3,62.6 365,102.8 443.8,141.8 522.5,148.9 601.3,154.9 680,161.9" fill="none" stroke="var(--ex)" stroke-width="2.5" stroke-linejoin="round" stroke-linecap="round"></polyline>
     <g fill="var(--ex)">
@@ -371,7 +359,7 @@ details.gloss[open] summary::before { transform:rotate(90deg); }
   <div class="note">
     <b>Ayres &amp; Nalebuff（2010）</b> 建議年輕時把股票配置槓桿拉高到 <b>200%</b>（2倍margin），隨財富累積分三階段降槓桿：
     Stage 1（累積達目標值 0–50%）維持 2x；Stage 2（50–100%）槓桿線性降到 1x；Stage 3（達 100%）完全去槓桿後，股票佔比再緩降到退休時的 <b>83%</b>。
-    這條曲線的 y 軸換算成本頁的符號就是 <code>E</code>——200% 是 <code>E=2.0</code>，83% 是 <code>E=0.83</code>。<br><br>
+    這條曲線的 y 軸換算成本頁的符號就是 <code>ERR</code>——200% 是 <code>ERR=2.0</code>，83% 是 <code>ERR=0.83</code>。<br><br>
     <b>年齡軸是示意值，不是論文原圖</b>：原始模型是照「累積財富達目標值的百分比」分階段，不是直接綁定年齡——轉折點取決於個人儲蓄率與實際市場報酬，牛市會比熊市更快從 Stage 1 進入 Stage 2。上圖是依書中「25歲起、40年投資期、目標83%終身股票配置」的例子畫出的示意曲線。
   </div>
   <ul class="reflist">
@@ -523,11 +511,9 @@ function calc(){
   const expAmt=2*L+U;
   const solvent = NAV>0;
 
-  const m = A>0 ? expAmt/A : 0;                 // 市場曝險（資產側）
-  const g = solvent ? A/NAV : Infinity;         // 財務槓桿（負債側）
-  const E = solvent ? expAmt/NAV : Infinity;    // 股票組合曝險 = m × g
+  const E = solvent ? expAmt/NAV : Infinity;    // 實質曝險 ERR
+  const k = solvent ? A/NAV : Infinity;         // 總資產 / 淨值（僅用於配置）
   const l = solvent ? L/NAV : 0, u = solvent ? U/NAV : 0;
-  const invested = A>0 ? (L+U)/A : 0;
 
   // --- 指標卡：上排金額、下排比率 ---
   $('oA').textContent = wan(A);
@@ -540,26 +526,15 @@ function calc(){
   $('oExp').textContent = wan(expAmt);
   $('oExpN').textContent = `2×正二 + 大盤 = ${nf0.format(expAmt)} 元`;
 
-  $('oM').textContent = pct(m);
-  $('oMN').textContent = `${wan(expAmt)} / ${wan(A)}　投入率 ${pct(invested,0)}`;
-
-  $('oG').textContent = solvent ? g.toFixed(2) : '∞';
-  $('oG').className = 'v lv';
-  $('oGN').textContent = solvent
-    ? `${wan(A)} / ${wan(NAV)}　${DEBT>0?'借款 '+wan(DEBT):'無負債'}`
-    : '淨值為負';
-
   $('oE').textContent = solvent ? pct(E) : '∞';
   $('oE').className = 'v' + (!solvent ? ' danger' : (E>2.5?' warn':''));
   $('oEN').textContent = solvent
     ? `${wan(expAmt)} / ${wan(NAV)}　目標 ${pct(Es,0)}，偏離 ${spct(E-Es,1).replace('%',' 點')}`
     : '淨值為負';
 
-  $('eqM').textContent = pct(m,0);
-  $('eqG').textContent = solvent ? g.toFixed(2) : '∞';
+  $('eqN').textContent = wan(NAV);
+  $('eqNS').textContent = `${wan(A)} − ${wan(DEBT)}`;
   $('eqE').textContent = solvent ? pct(E,0) : '∞';
-  $('eqMS').textContent = `${wan(expAmt)} / ${wan(A)}`;
-  $('eqGS').textContent = `${wan(A)} / ${wan(NAV)}`;
   $('eqES').textContent = `${wan(expAmt)} / ${wan(NAV)}`;
   $('ruinPct').textContent = solvent && E>0 ? (100/E).toFixed(0)+'%' : '—';
 
@@ -571,16 +546,16 @@ function calc(){
   ].map(([n,v,w])=>{
     const ex=v*w;
     return `<tr><td>${n}</td><td>${money(v)}</td><td>×${w}</td><td>${money(ex)}</td>
-      <td class="cm">${A>0?pct(ex/A,0):'—'}</td><td>${solvent?pct(ex/NAV,0):'—'}</td></tr>`;
+      <td>${solvent?pct(ex/NAV,0):'—'}</td></tr>`;
   }).join('') +
   `<tr style="font-weight:650"><td>合計</td><td>${money(A)}</td><td class="flat">—</td><td>${money(expAmt)}</td>
-    <td class="cm">${pct(m,0)}</td><td>${solvent?pct(E,0):'∞'}</td></tr>`;
+    <td>${solvent?pct(E,0):'∞'}</td></tr>`;
 
   // --- 風險橫幅 ---
   const risks=[];
   if(!solvent) risks.push(['bad','<b>淨值為負</b> — 負債已超過總資產。以下配置建議無意義，優先去槓桿。']);
   else {
-    if(E>2.5) risks.push(['act',`股票組合曝險 ${pct(E)} 相當高：大盤跌 ${(100/E).toFixed(0)}% 淨值即歸零。`]);
+    if(E>2.5) risks.push(['act',`實質曝險 ${pct(E)} 相當高：大盤跌 ${(100/E).toFixed(0)}% 淨值即歸零。`]);
   }
   $('bannerRisk').innerHTML = risks.map(([k,t])=>`<div class="banner ${k}">${t}</div>`).join('');
 
@@ -601,14 +576,14 @@ function calc(){
     return;
   }
 
-  // --- 目標配置（現金全數投入：正二 + 大盤 = g，皆佔淨值）---
-  const tlRaw=Es-g, tl=Math.min(Math.max(tlRaw,0),g), tu=g-tl;
+  // --- 目標配置（現金全數投入：正二 + 大盤 = 總資產，佔淨值比 = k）---
+  const tlRaw=Es-k, tl=Math.min(Math.max(tlRaw,0),k), tu=k-tl;
   const cw=$('clampWarn');
   if(Math.abs(tl-tlRaw)>1e-9){
     cw.hidden=false;
-    cw.textContent = Es>2*g
-      ? `⚠ 目前 g = ${g.toFixed(2)}，可達股票組合曝險上限 ${pct(2*g,0)}，無法達到目標 ${pct(Es,0)}。需增加借款或降低目標。`
-      : `⚠ 目前 g = ${g.toFixed(2)}，全數投入下股票組合曝險至少 ${pct(g,0)}，無法降到目標 ${pct(Es,0)}。已調整為全大盤配置。`;
+    cw.textContent = Es>2*k
+      ? `⚠ 目前總資產為淨值的 ${k.toFixed(2)} 倍，ERR 可達上限 ${pct(2*k,0)}，無法達到目標 ${pct(Es,0)}。需增加借款或降低目標。`
+      : `⚠ 目前總資產為淨值的 ${k.toFixed(2)} 倍，全數投入下 ERR 至少 ${pct(k,0)}，無法降到目標 ${pct(Es,0)}。已調整為全大盤配置。`;
   } else cw.hidden=true;
 
   const tL=tl*NAV, tU=tu*NAV;
