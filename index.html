@@ -132,25 +132,36 @@ details.gloss[open] summary::before { transform:rotate(90deg); }
 <div class="wrap">
 
 <h1>曝險計算機</h1>
-<p class="sub">市場曝險 (Market Exposure) × 財務槓桿 (Financial Leverage) ‧ 正二 + 大盤 + 現金 + 信貸 + 質押 ‧ 定期檢驗與再平衡 (Rebalance)</p>
+<p class="sub">市場曝險 (Market Exposure) × 財務槓桿 (Financial Leverage) ‧ 正二 + 大盤 + 現金 + 信貸 + 質押</p>
 
-<h2>市值 <span style="font-weight:400;color:var(--muted);font-size:11px">Market Value</span></h2>
+<h2>資金 <span style="font-weight:400;color:var(--muted);font-size:11px">Funds</span></h2>
 <div class="card">
-  <div class="grid g3">
+  <div class="grid g2">
+    <div><label>想投入投資的現金（萬元，含申請中的貸款金額）<br><span style="opacity:.7">Cash to Invest</span></label><input type="text" inputmode="text" autocomplete="off" class="numfield" id="cash" value="120"><div class="unit" id="uC"></div></div>
+    <div><label>緊急預備金（萬元）<br><span style="opacity:.7">Emergency Fund</span></label><input type="text" inputmode="text" autocomplete="off" class="numfield" id="emerg" value="30"><div class="unit" id="uEm"></div></div>
+  </div>
+  <div class="note">
+    「想投入的現金」視為可投資資產，計入總資產與淨值；申請中的貸款請同時填在下方負債。
+    <b>緊急預備金不投入市場</b>，不計入曝險、淨值與配置計算，只是提醒你先留好。
+  </div>
+</div>
+
+<h2>目前股票市值 <span style="font-weight:400;color:var(--muted);font-size:11px">Current Stock Value</span></h2>
+<div class="card">
+  <div class="grid g2">
     <div><label>大盤正二 ETF 市值（萬元）<br><span style="opacity:.7">2x Leveraged ETF</span></label><input type="text" inputmode="text" autocomplete="off" class="numfield" id="valL" value="60"><div class="unit" id="uL"></div></div>
     <div><label>大盤 ETF 市值（萬元）<br><span style="opacity:.7">Market ETF</span></label><input type="text" inputmode="text" autocomplete="off" class="numfield" id="valU" value="20"><div class="unit" id="uU"></div></div>
-    <div><label>現金（萬元）<br><span style="opacity:.7">Cash</span></label><input type="text" inputmode="text" autocomplete="off" class="numfield" id="cash" value="120"><div class="unit" id="uC"></div></div>
   </div>
   <div class="note">
     填<b>目前市值</b>，不是投入成本 —— 曝險完全由市值決定，成本價不進任何公式。
-    台股沒有資本利得稅，再平衡賣出也沒有稅務考量。配息入帳後直接加進現金。
+    台股沒有資本利得稅，賣出也沒有稅務考量。配息入帳後直接加進上方現金。
   </div>
 </div>
 
 <h2>負債 <span style="font-weight:400;color:var(--muted);font-size:11px">Liabilities</span></h2>
 <div class="card">
   <div class="grid g2">
-    <div><label>信貸 餘額（萬元）<br><span style="opacity:.7">Unsecured Loan (P)</span></label><input type="text" inputmode="text" autocomplete="off" class="numfield" id="loanP" value="100"><div class="unit" id="uP"></div></div>
+    <div><label>信貸 餘額（萬元）<br><span style="opacity:.7">Unsecured Loan (P)</span></label><input type="text" inputmode="text" autocomplete="off" class="numfield" id="loanP" value="40"><div class="unit" id="uP"></div></div>
     <div><label>質押借款 餘額（萬元）<br><span style="opacity:.7">Pledged Loan (Q)</span></label><input type="text" inputmode="text" autocomplete="off" class="numfield" id="loanQ" value="20"><div class="unit" id="uQ"></div></div>
   </div>
   <div class="note">
@@ -161,15 +172,13 @@ details.gloss[open] summary::before { transform:rotate(90deg); }
 
 <h2>目標政策 <span style="font-weight:400;color:var(--muted);font-size:11px">Target Policy</span></h2>
 <div class="card">
-  <div class="grid g3">
+  <div class="grid">
     <div><label>目標股票組合曝險 E*（%）<br><span style="opacity:.7">Target Stock Portfolio Exposure</span></label><input type="text" inputmode="text" autocomplete="off" class="numfield" id="eStar" value="180"></div>
-    <div><label>現金緩衝 b（% of 淨值）<br><span style="opacity:.7">Cash Buffer</span></label><input type="text" inputmode="text" autocomplete="off" class="numfield" id="bBuf" value="15"></div>
-    <div><label>再平衡門檻（百分點）<br><span style="opacity:.7">Rebalance Band</span></label><input type="text" inputmode="text" autocomplete="off" class="numfield" id="band" value="15"></div>
   </div>
   <div id="clampWarn" class="warnmsg" hidden></div>
   <div class="note">
-    目標以<b>股票組合曝險 E</b> 設定（淨值層級，決定你的實際波動）。負債固定時，隱含的目標市場曝險 <code>m* = E* / g</code>。
-    目標配置：正二 <code>= E* − g + b</code>、大盤 <code>= 2g − E* − 2b</code>、現金 <code>= b</code>。可達上限 <code>E ≤ 2g</code>。
+    目標以<b>股票組合曝險 E</b> 設定（淨值層級，決定你的實際波動）。現金全數投入，目標配置（佔淨值）：正二 <code>= E* − g</code>、大盤 <code>= 2g − E*</code>。
+    可達範圍 <code>g ≤ E* ≤ 2g</code>。
   </div>
 </div>
 
@@ -203,7 +212,6 @@ details.gloss[open] summary::before { transform:rotate(90deg); }
 </div>
 
 <div id="bannerRisk"></div>
-<div id="banner" class="banner hold"></div>
 
 <h2>資產負債表 <span style="font-weight:400;color:var(--muted);font-size:11px">Balance Sheet</span></h2>
 <div class="card"><div class="tw">
@@ -219,44 +227,16 @@ details.gloss[open] summary::before { transform:rotate(90deg); }
   <div class="bar" id="barNow"></div>
   <div style="font-size:12px;color:var(--muted);margin-top:14px">目標</div>
   <div class="bar" id="barTgt"></div>
-  <div class="legend"><span><i class="s-l"></i>正二</span><span><i class="s-u"></i>大盤</span><span><i class="s-c"></i>現金</span></div>
+  <div class="legend"><span><i class="s-l"></i>正二</span><span><i class="s-u"></i>大盤</span></div>
 </div>
 
-<h2>再平衡動作 <span style="font-weight:400;color:var(--muted);font-size:11px">Rebalance Actions</span></h2>
+<h2>配置動作 <span style="font-weight:400;color:var(--muted);font-size:11px">Allocation Actions</span></h2>
 <div class="card"><div class="tw">
   <table>
     <thead><tr><th>標的</th><th>目前</th><th>目標</th><th>差額</th><th>動作</th></tr></thead>
     <tbody id="trades"></tbody>
   </table>
 </div><div class="note" id="costNote"></div></div>
-
-<h2>情境模擬 <span style="font-weight:400;color:var(--muted);font-size:11px">Scenario Simulation</span></h2>
-<div class="card"><div class="tw">
-  <table>
-    <thead><tr><th>大盤變動</th><th>正二</th><th>大盤</th><th class="cx">曝險金額</th><th>總資產</th><th>淨值</th><th>淨值報酬</th><th class="cm">m</th><th class="cg">g</th><th>E</th></tr></thead>
-    <tbody id="scen"></tbody>
-  </table>
-</div>
-  <div class="note">
-    紅底 = 淨值歸零或轉負。注意 <span class="cm"><b>m</b></span> 和 <span class="cg"><b>g</b></span> 的漂移方向<b>相反</b>：
-    下跌時 m 自動下降（正二的保護），g 卻急速上升（負債不變、淨值縮水）。E 由誰佔上風決定。<br>
-    未計入正二的波動耗損（台灣50 σ ≈ 18–22%，年化耗損量級 <code>σ²</code> ≈ 3–5%，按正二比重打折）。
-  </div>
-</div>
-
-<h2>再平衡後：下次觸發點 <span style="font-weight:400;color:var(--muted);font-size:11px">Next Trigger Point</span></h2>
-<div class="card"><div class="tw">
-  <table>
-    <thead><tr><th>方向</th><th>大盤需變動</th><th>屆時 E</th><th>屆時淨值變動</th></tr></thead>
-    <tbody id="triggers"></tbody>
-  </table>
-</div>
-  <div class="note">
-    公式 <code>r = δ / (D − δ·E)</code>，漂移敏感度 <code>D = E + 2l − E²</code>（l = 正二 / 淨值）。
-    負債不隨市場波動，所以 <code>NAV′ = NAV × (1 + E·r)</code> 精確成立。
-    <b>D 為正</b> = 跌時自動去槓桿（正二主導，安全）；<b>D 為負</b> = 跌時槓桿放大（負債主導，危險）。
-  </div>
-</div>
 
 <hr>
 <div class="note" style="margin-top:16px">
@@ -266,8 +246,8 @@ details.gloss[open] summary::before { transform:rotate(90deg); }
   崩盤時 g 會自己往上跑，這時唯一能主動壓的是 m。<br><br>
   <b>本表刻意沒算的事</b>（與曝險比例正交，但真實存在）：質押的維持率與追繳／斷頭；
   信貸的聯徵 DBR 22 倍規範與到期轉貸；利息對淨值的長期侵蝕。<br><br>
-  <b>使用方式</b>：每季打開一次，更新三個市值與兩筆餘額。E 沒超出門檻就什麼都不做 ——
-  檢查用日曆，動作用帶狀。實際下單時把差額除以現價換算張數，不足一張走零股。
+  <b>使用方式</b>：填入想投入的現金、緊急預備金、兩個股票市值與兩筆負債餘額，再設定目標 E*。
+  實際下單時把差額除以現價換算張數，不足一張走零股。
 </div>
 
 <details class="gloss">
@@ -281,8 +261,10 @@ details.gloss[open] summary::before { transform:rotate(90deg); }
     <p>追蹤指數「兩倍」漲跌幅的 ETF（例：台灣50正2）。大盤漲跌 1%，它大約漲跌 2%。</p></div>
   <div class="gterm"><span class="zh">大盤 ETF</span> <span class="en">Market / Index ETF</span>
     <p>追蹤大盤指數本身、不放大波動的 ETF（例：0050）。大盤漲跌 1%，它也漲跌約 1%。</p></div>
-  <div class="gterm"><span class="zh">現金</span> <span class="en">Cash</span> <span class="sym">(C)</span>
-    <p>還沒投入市場、不會因為大盤漲跌而變動的部位。</p></div>
+  <div class="gterm"><span class="zh">想投入投資的現金</span> <span class="en">Cash to Invest</span> <span class="sym">(C)</span>
+    <p>準備投入市場、但還沒買進的錢（含申請中的貸款），不會因為大盤漲跌而變動。</p></div>
+  <div class="gterm"><span class="zh">緊急預備金</span> <span class="en">Emergency Fund</span>
+    <p>留作生活應急、不投入市場的錢，本表不計入任何曝險與淨值。</p></div>
   <div class="gterm"><span class="zh">信貸</span> <span class="en">Unsecured / Personal Loan</span> <span class="sym">(P)</span>
     <p>沒有拿股票或 ETF 抵押的貸款，銀行純憑個人信用核貸。</p></div>
   <div class="gterm"><span class="zh">質押借款</span> <span class="en">Securities-backed / Pledged Loan</span> <span class="sym">(Q)</span>
@@ -302,18 +284,9 @@ details.gloss[open] summary::before { transform:rotate(90deg); }
   <div class="gterm"><span class="zh">股票組合曝險</span> <span class="en">Stock Portfolio Exposure</span> <span class="sym">(E = m × g)</span>
     <p>你的淨值「實際」承受的波動幅度 —— 大盤漲跌 1%，淨值大約變動 E%。<b>三個指標中最終該看的是這個。</b></p></div>
 
-  <div class="grp-t">目標與再平衡 · Target &amp; Rebalancing</div>
+  <div class="grp-t">目標 · Target</div>
   <div class="gterm"><span class="zh">目標股票組合曝險</span> <span class="en">Target Stock Portfolio Exposure</span> <span class="sym">(E*)</span>
     <p>你設定、長期想維持的曝險水位，依自己能承受的波動程度決定，不是算出來的，是你選的。</p></div>
-  <div class="gterm"><span class="zh">現金緩衝</span> <span class="en">Cash Buffer</span> <span class="sym">(b)</span>
-    <p>刻意保留、不投入市場的現金比例，用來緩衝下跌時的壓力，避免被迫追繳或斷頭。</p></div>
-  <div class="gterm"><span class="zh">再平衡</span> <span class="en">Rebalance</span>
-    <p>把實際配置調整回目標配置的動作（買進或賣出部分部位）。</p></div>
-  <div class="gterm"><span class="zh">再平衡門檻</span> <span class="en">Rebalance Band / Threshold</span>
-    <p>曝險偏離目標「多少百分點」才值得真的動手調整，避免每次小波動都要交易、增加成本。</p></div>
-  <div class="gterm"><span class="zh">漂移敏感度</span> <span class="en">Drift Sensitivity</span> <span class="sym">(D)</span>
-    <p>大盤變動 1% 時，E 會自動往哪個方向、多快移動。<b>D 為正</b> = 下跌時曝險自動下降（正二保護你，較安全）；<b>D 為負</b> = 下跌時曝險自動上升（負債主導，較危險，需要主動處理）。</p></div>
-
   <div class="grp-t">本表沒算、但你該知道的風險 · Not Modeled</div>
   <div class="gterm"><span class="zh">維持率</span> <span class="en">Maintenance Ratio</span>
     <p>質押借款常見的風控指標：<code>擔保品市值 / 借款金額</code>。低於銀行規定的比例，會被要求補錢或強制賣出。</p></div>
@@ -435,7 +408,7 @@ details.gloss[open] summary::before { transform:rotate(90deg); }
 
 <script>
 const $ = id => document.getElementById(id);
-const IDS = ['valL','valU','cash','loanP','loanQ','eStar','bBuf','band'];
+const IDS = ['cash','emerg','valL','valU','loanP','loanQ','eStar'];
 const STORAGE_KEY = 'exposureCalc.v1';
 function saveState(){
   const state = {};
@@ -496,9 +469,9 @@ const FEE_RATE=0.001425, FEE_DISC=0.3, FEE_MIN=20, TAX_ETF=0.001;
 const buyCost  = a => a>0 ? Math.max(a*FEE_RATE*FEE_DISC, FEE_MIN) : 0;
 const sellCost = a => a>0 ? Math.max(a*FEE_RATE*FEE_DISC, FEE_MIN) + a*TAX_ETF : 0;
 
-function drawBar(el,l,u,c){
-  const tot=Math.max(l,0)+Math.max(u,0)+Math.max(c,0) || 1;
-  el.innerHTML=[['s-l',l,'正二'],['s-u',u,'大盤'],['s-c',c,'現金']].map(([k,w,n])=>{
+function drawBar(el,l,u){
+  const tot=Math.max(l,0)+Math.max(u,0) || 1;
+  el.innerHTML=[['s-l',l,'正二'],['s-u',u,'大盤']].map(([k,w,n])=>{
     if(w<=0.001) return '';
     const sh=w/tot;
     return `<span class="${k}" style="width:${(sh*100).toFixed(2)}%">${sh>0.11?n+' '+(w*100).toFixed(0)+'%':''}</span>`;
@@ -509,9 +482,9 @@ function calc(){
   // 所有金額輸入皆為萬元，內部一律換算為元計算
   const L=numOf('valL')*1e4, U=numOf('valU')*1e4, C=numOf('cash')*1e4;
   const P=numOf('loanP')*1e4, Q=numOf('loanQ')*1e4;
-  const Es=numOf('eStar')/100, band=numOf('band')/100;
+  const Es=numOf('eStar')/100, EM=numOf('emerg')*1e4;
 
-  [['uL',L],['uU',U],['uC',C],['uP',P],['uQ',Q]].forEach(([k,v])=>{
+  [['uL',L],['uU',U],['uC',C],['uEm',EM],['uP',P],['uQ',Q]].forEach(([k,v])=>{
     $(k).textContent = `= ${nf0.format(v)} 元`;
   });
 
@@ -522,8 +495,7 @@ function calc(){
   const m = A>0 ? expAmt/A : 0;                 // 市場曝險（資產側）
   const g = solvent ? A/NAV : Infinity;         // 財務槓桿（負債側）
   const E = solvent ? expAmt/NAV : Infinity;    // 股票組合曝險 = m × g
-  const l = solvent ? L/NAV : 0, u = solvent ? U/NAV : 0, c = solvent ? C/NAV : 0;
-  const D = solvent ? E+2*l-E*E : 0;
+  const l = solvent ? L/NAV : 0, u = solvent ? U/NAV : 0;
   const invested = A>0 ? (L+U)/A : 0;
 
   // --- 指標卡：上排金額、下排比率 ---
@@ -564,7 +536,7 @@ function calc(){
   $('decomp').innerHTML=[
     ['正二', L, 2, '#7c3aed'],
     ['大盤 ETF', U, 1, '#2563eb'],
-    ['現金', C, 0, '#64748b'],
+    ['投資現金', C, 0, '#64748b'],
   ].map(([n,v,w])=>{
     const ex=v*w;
     return `<tr><td>${n}</td><td>${money(v)}</td><td>×${w}</td><td>${money(ex)}</td>
@@ -575,18 +547,15 @@ function calc(){
 
   // --- 風險橫幅 ---
   const risks=[];
-  if(!solvent) risks.push(['bad','<b>淨值為負</b> — 負債已超過總資產。以下再平衡建議無意義，優先去槓桿。']);
+  if(!solvent) risks.push(['bad','<b>淨值為負</b> — 負債已超過總資產。以下配置建議無意義，優先去槓桿。']);
   else {
     if(E>2.5) risks.push(['act',`股票組合曝險 ${pct(E)} 相當高：大盤跌 ${(100/E).toFixed(0)}% 淨值即歸零。`]);
-    if(D<-0.05) risks.push(['act',
-      `D = ${D.toFixed(2)} 為負 —— <b>財務槓桿 g 壓過了正二的自我保護</b>，下跌時股票組合曝險會自動放大。
-       想改善：還款降 g，或把正二換成大盤降 m。`]);
   }
   $('bannerRisk').innerHTML = risks.map(([k,t])=>`<div class="banner ${k}">${t}</div>`).join('');
 
   // --- 資產負債表 ---
   $('bs').innerHTML=[
-    ['正二', L], ['大盤 ETF', U], ['現金', C], ['總資產', A],
+    ['正二', L], ['大盤 ETF', U], ['投資現金', C], ['總資產', A],
     ['信貸', -P], ['質押借款', -Q], ['淨值', NAV],
   ].map(([n,v])=>{
     const bold=(n==='總資產'||n==='淨值')?'font-weight:650':'';
@@ -595,97 +564,43 @@ function calc(){
   }).join('');
 
   if(!solvent){
-    $('banner').className='banner bad';
-    $('banner').innerHTML='<b>無法計算再平衡</b> — 淨值須為正。';
-    ['trades','triggers','scen'].forEach(k=>$(k).innerHTML='');
+    ['trades'].forEach(k=>$(k).innerHTML='');
     $('costNote').textContent=''; $('clampWarn').hidden=true;
-    drawBar($('barNow'),0,0,0); drawBar($('barTgt'),0,0,0);
+    drawBar($('barNow'),0,0); drawBar($('barTgt'),0,0);
     return;
   }
 
-  // --- 目標配置 ---
-  const bIn=numOf('bBuf')/100;
-  const bMin=Math.max(0, g-Es), bMax=Math.max(0, g-Es/2);
-  const b=Math.min(Math.max(bIn,bMin),bMax);
+  // --- 目標配置（現金全數投入：正二 + 大盤 = g，皆佔淨值）---
+  const tlRaw=Es-g, tl=Math.min(Math.max(tlRaw,0),g), tu=g-tl;
   const cw=$('clampWarn');
-  if(Math.abs(b-bIn)>1e-9){
+  if(Math.abs(tl-tlRaw)>1e-9){
     cw.hidden=false;
     cw.textContent = Es>2*g
       ? `⚠ 目前 g = ${g.toFixed(2)}，可達股票組合曝險上限 ${pct(2*g,0)}，無法達到目標 ${pct(Es,0)}。需增加借款或降低目標。`
-      : `⚠ 目標 ${pct(Es,0)} 且 g = ${g.toFixed(2)} 之下，現金緩衝只能落在 ${pct(bMin,0)} ～ ${pct(bMax,0)}，已自動調整為 ${pct(b,0)}。`;
+      : `⚠ 目前 g = ${g.toFixed(2)}，全數投入下股票組合曝險至少 ${pct(g,0)}，無法降到目標 ${pct(Es,0)}。已調整為全大盤配置。`;
   } else cw.hidden=true;
 
-  const tl=Es-g+b, tu=2*g-Es-2*b, tc=b;
-  const tL=tl*NAV, tU=tu*NAV, tC=tc*NAV;
-  drawBar($('barNow'),l,u,c); drawBar($('barTgt'),tl,tu,tc);
-
-  // --- 觸發判斷 ---
-  const diff=E-Es, trig=Math.abs(diff)>band;
-  const bn=$('banner');
-  bn.className='banner '+(trig?'act':'hold');
-  bn.innerHTML = trig
-    ? `<b>觸發再平衡</b> — 股票組合曝險 ${pct(E)}，偏離目標 ${Math.abs(diff*100).toFixed(1)} 個百分點，超過 ${(band*100).toFixed(0)} 點門檻。${diff>0?'需減碼。':'需加碼。'}
-       隱含目標市場曝險 m* = ${pct(Es/g,0)}。`
-    : `<b>不動作</b> — 股票組合曝險 ${pct(E)}，偏離目標僅 ${Math.abs(diff*100).toFixed(1)} 個百分點，在門檻內。下次再檢查即可。`;
+  const tL=tl*NAV, tU=tu*NAV;
+  drawBar($('barNow'),l,u); drawBar($('barTgt'),tl,tu);
 
   // --- 交易 ---
   let cost=0;
   $('trades').innerHTML=[
-    {n:'正二',now:L,tgt:tL,tradable:true},
-    {n:'大盤',now:U,tgt:tU,tradable:true},
-    {n:'現金',now:C,tgt:tC,tradable:false}
+    {n:'正二',now:L,tgt:tL},
+    {n:'大盤',now:U,tgt:tU}
   ].map(r=>{
     const d=r.tgt-r.now;
     let act='<span class="flat">—</span>';
     if(Math.abs(d)>=1){
-      if(r.tradable){
-        cost += d>0?buyCost(Math.abs(d)):sellCost(Math.abs(d));
-        act = d>0?'<span class="buy">買進</span>':'<span class="sell">賣出</span>';
-      } else act = d>0?'<span class="sell">回收</span>':'<span class="buy">投入</span>';
+      cost += d>0?buyCost(Math.abs(d)):sellCost(Math.abs(d));
+      act = d>0?'<span class="buy">買進</span>':'<span class="sell">賣出</span>';
     }
     return `<tr><td>${r.n}</td><td>${money(r.now)}</td><td>${money(r.tgt)}</td>
       <td>${d>=0?'+':'−'}${money(Math.abs(d))}</td><td>${act}</td></tr>`;
   }).join('');
-  // E 在門檻內、但組合差很多時（例如 b 被夾住），要講清楚下表只是參考
-  const compOff = (Math.abs(tL-L)+Math.abs(tU-U)) > NAV*0.10;
-  $('costNote').innerHTML =
-    (!trig && compOff
-      ? `<b>注意</b>：股票組合曝險 E 在門檻內、<b>不需動作</b>，但下表是「完全對齊目標配置」的差額 ——
-         目前的 E 是用另一種組合湊出來的。兩者 E 相同、<b>漂移特性 D 不同</b>。
-         除非你想改變下跌時的行為，否則不必執行。<br>`
-      : '') +
-    (cost>0
-      ? `估計交易成本 <b>${money(cost)} 元</b>（手續費 0.1425%×${FEE_DISC*10}折、最低 20 元；ETF 賣出證交稅 0.1%）＝ 淨值的 ${pct(cost/NAV,3)}。`
-      : '目前無需交易。');
-
-  // --- 情境 ---
-  $('scen').innerHTML=[-0.4,-0.3,-0.2,-0.1,0,0.1,0.2,0.3].map(r=>{
-    const L2=Math.max(L*(1+2*r),0), U2=U*(1+r), A2=L2+U2+C, N2=A2-DEBT;
-    const ex2=2*L2+U2;
-    const m2=A2>0?ex2/A2:0, g2=N2>0?A2/N2:Infinity, E2=N2>0?ex2/N2:0;
-    const ret=N2/NAV-1;
-    return `<tr class="${N2<=0?'brk':''}">
-      <td class="${r>0?'buy':(r<0?'sell':'flat')}">${spct(r,0)}</td>
-      <td>${money(L2)}</td><td>${money(U2)}</td><td class="cx">${money(ex2)}</td><td>${money(A2)}</td><td>${money(N2)}</td>
-      <td class="${ret>0?'buy':(ret<0?'sell':'flat')}">${N2>0?spct(ret):'歸零'}</td>
-      <td class="cm">${pct(m2,0)}</td>
-      <td class="cg">${N2>0?g2.toFixed(2):'∞'}</td>
-      <td>${N2>0?pct(E2,0):'—'}</td></tr>`;
-  }).join('');
-
-  // --- 下次觸發 ---
-  const Dt=Es+2*tl-Es*Es;
-  const mk=(dlt,label)=>{
-    const den=Dt-dlt*Es;
-    // Dt 可正可負：Dt>0 時漲會推高 E，Dt<0 時跌會推高 E。r 的正負自己會說明方向。
-    if(Math.abs(den)<1e-9)
-      return `<tr><td>${label}</td><td colspan="3" class="flat">此配置不會往該方向漂移（D ≈ ${Dt.toFixed(2)}）</td></tr>`;
-    const r=dlt/den;
-    if(!isFinite(r)||r<=-0.95||r>3)
-      return `<tr><td>${label}</td><td colspan="3" class="flat">需極端行情，實務上不會觸發</td></tr>`;
-    return `<tr><td>${label}</td><td>${spct(r)}</td><td>${pct(Es+dlt)}</td><td>${spct(Es*r)}</td></tr>`;
-  };
-  $('triggers').innerHTML = mk(band,'曝險過高 → 減碼') + mk(-band,'曝險過低 → 加碼');
+  $('costNote').innerHTML = cost>0
+    ? `估計交易成本 <b>${money(cost)} 元</b>（手續費 0.1425%×${FEE_DISC*10}折、最低 20 元；ETF 賣出證交稅 0.1%）＝ 淨值的 ${pct(cost/NAV,3)}。`
+    : '目前無需交易。';
 }
 
 IDS.forEach(id=>{
