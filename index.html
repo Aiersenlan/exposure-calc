@@ -97,6 +97,15 @@ tr.brk td { background:var(--danger-bg); }
 .s-l{background:#7c3aed} .s-u{background:#2563eb} .s-c{background:#64748b}
 .legend { font-size:11px; color:var(--muted); margin-top:5px; display:flex; gap:14px; flex-wrap:wrap; }
 .legend i { display:inline-block; width:9px; height:9px; border-radius:2px; margin-right:4px; }
+.fm { display:grid; grid-template-columns:170px 1fr auto; gap:10px; align-items:baseline; padding:12px 0; border-bottom:1px solid var(--line); }
+.fm .fl { font-weight:650; font-size:14px; }
+.fm .fl span { display:block; font-weight:400; font-size:11.5px; color:var(--muted); }
+.fm .fx { color:var(--muted); font-size:13px; font-variant-numeric:tabular-nums; }
+.fm .fv { font-size:22px; font-weight:650; font-variant-numeric:tabular-nums; letter-spacing:-.02em; }
+@media (max-width:640px){ .fm { grid-template-columns:1fr auto; } .fm .fx { grid-column:1 / -1; order:3; } }
+.extbl { table-layout:fixed; }
+.extbl th, .extbl td { text-align:center; }
+.extbl th:first-child, .extbl td:first-child { text-align:left; }
 .exbtn { font:inherit; font-size:13px; padding:6px 14px; border-radius:7px; border:1px solid var(--accent);
   background:var(--accent); color:#fff; cursor:pointer; }
 .exbtn:hover { opacity:.88; }
@@ -141,7 +150,8 @@ details.gloss[open] summary::before { transform:rotate(90deg); }
     小明有 10 萬現金、20 萬預備金，身上有 15 萬正二與 100 萬 0050。某天他借了信貸 200 萬，把預備金提高到 50 萬，再自備 105 萬，其餘現金全部拿去投資，
     目標實質曝險拉到 <a href="#lifecycle" style="color:var(--accent)">生命週期投資參考</a>中的 <b>200%</b>。按下按鈕自動帶入：
   </div>
-  <div class="tw"><table>
+  <div class="tw"><table class="extbl">
+    <colgroup><col style="width:40%"><col style="width:24%"><col style="width:12%"><col style="width:24%"></colgroup>
     <thead><tr><th>欄位（萬元）</th><th>① 借款前</th><th></th><th>② 借款後</th></tr></thead>
     <tbody>
       <tr><td>想投入投資的現金</td><td>10</td><td style="text-align:center;color:var(--accent);font-weight:700">→</td><td>285</td></tr>
@@ -150,12 +160,12 @@ details.gloss[open] summary::before { transform:rotate(90deg); }
       <tr><td>大盤 ETF（0050）市值</td><td>100</td><td style="text-align:center;color:var(--accent);font-weight:700">→</td><td>100</td></tr>
       <tr><td>信貸餘額</td><td>0</td><td style="text-align:center;color:var(--accent);font-weight:700">→</td><td>200</td></tr>
       <tr><td>質押借款餘額</td><td>0</td><td style="text-align:center;color:var(--accent);font-weight:700">→</td><td>0</td></tr>
-      <tr><td>目標實質曝險 ERR*</td><td>200%</td><td style="text-align:center;color:var(--accent);font-weight:700">→</td><td>200%</td></tr>
-      <tr><td></td>
-        <td><button type="button" class="exbtn" data-ex="0">帶入 ①</button></td><td style="text-align:center;color:var(--accent);font-weight:700">→</td>
-        <td><button type="button" class="exbtn" data-ex="1">帶入 ②</button></td></tr>
+      <tr><td>目標實質曝險 ERR*</td><td>—</td><td style="text-align:center;color:var(--accent);font-weight:700">→</td><td>200%</td></tr>
+      <tr style="font-weight:650"><td>→ 算出目標正二市值</td><td class="flat">—</td><td style="text-align:center;color:var(--accent);font-weight:700">→</td><td style="color:var(--accent)">0</td></tr>
+      <tr style="font-weight:650"><td>→ 算出目標 0050 市值</td><td class="flat">—</td><td style="text-align:center;color:var(--accent);font-weight:700">→</td><td style="color:var(--accent)">400</td></tr>
+      <tr><td></td><td><button type="button" class="exbtn" data-ex="0">帶入 ①</button></td><td style="text-align:center;color:var(--accent);font-weight:700">→</td><td><button type="button" class="exbtn" data-ex="1">帶入 ②</button></td></tr>
     </tbody>
-  </table></div>
+</table></div>
   <div class="note">
     ② 的現金 285 = 原現金 10 + 借款 200 − 補足預備金 30（20 → 50）+ 自備再投入 105。
     ERR 的上限是 2 × 總資產 / 淨資產，所以要達到 ERR* = 200%，總資產不能超過淨資產的 2 倍，
@@ -213,37 +223,14 @@ details.gloss[open] summary::before { transform:rotate(90deg); }
 </div>
 
 <h2>曝險 <span style="font-weight:400;color:var(--muted);font-size:11px">Exposure</span></h2>
-<div class="hero">
-  <div><div class="k">總資產 A<span class="en">Total Assets</span></div><div class="v" id="oA">—</div><div class="n" id="oAN"></div></div>
-  <div><div class="k">淨值 NAV<span class="en">Net Asset Value</span></div><div class="v" id="oNav">—</div><div class="n" id="oNavN"></div></div>
-  <div><div class="k">股票曝險金額<span class="en">Stock Exposure Amount</span></div><div class="v ex" id="oExp">—</div><div class="n" id="oExpN"></div></div>
-  <div><div class="k">實質曝險 ERR<span class="en">Effective Risk Exposure Ratio</span></div><div class="v" id="oE">—</div><div class="n" id="oEN"></div></div>
-</div>
-
-<div class="card" style="margin-top:14px">
-  <div class="eq">
-    <div class="term"><div class="t">淨資產 NAV</div><div class="b" id="eqN">—</div><div class="s" id="eqNS"></div></div>
-    <div class="op">→</div>
-    <div class="term"><div class="t">實質曝險 ERR<br><span style="opacity:.75">曝險金額 / 淨資產</span></div><div class="b" id="eqE">—</div><div class="s" id="eqES"></div></div>
-  </div>
-  <div class="tw"><table>
-    <thead><tr><th>項目</th><th>市值</th><th>曝險權重</th><th>曝險金額</th><th>貢獻 ERR</th></tr></thead>
-    <tbody id="decomp"></tbody>
-  </table></div>
-  <div class="note">
-    <b>ERR</b> 是你真正承受的：大盤漲跌 1%，淨值變動 ERR%。大盤跌 <span id="ruinPct">—</span> 淨值歸零。
-  </div>
+<div class="card">
+  <div class="fm"><div class="fl">淨資產 NAV<span>= 總資產 A − 負債</span></div><div class="fx" id="fNavX"></div><div class="fv" id="fNavV"></div></div>
+  <div class="fm"><div class="fl">曝險金額<span>= 正二 × 2 + 大盤 × 1</span></div><div class="fx" id="fExpX"></div><div class="fv" id="fExpV"></div></div>
+  <div class="fm"><div class="fl">實質曝險 ERR<span>= 曝險金額 / 淨資產</span></div><div class="fx" id="fErrX"></div><div class="fv" id="fErrV"></div></div>
+  <div class="note">大盤漲跌 1%，淨值約變動 ERR%。大盤跌 <span id="ruinPct">—</span> 淨值歸零。</div>
 </div>
 
 <div id="bannerRisk"></div>
-
-<h2>資產負債表 <span style="font-weight:400;color:var(--muted);font-size:11px">Balance Sheet</span></h2>
-<div class="card"><div class="tw">
-  <table>
-    <thead><tr><th>項目</th><th>金額</th><th>佔總資產</th><th>佔淨值</th></tr></thead>
-    <tbody id="bs"></tbody>
-  </table>
-</div></div>
 
 <h2>配置 <span style="font-weight:400;color:var(--muted);font-size:11px">Allocation</span></h2>
 <div class="card">
@@ -515,41 +502,16 @@ function calc(){
   const k = solvent ? A/NAV : Infinity;         // 總資產 / 淨值（僅用於配置）
   const l = solvent ? L/NAV : 0, u = solvent ? U/NAV : 0;
 
-  // --- 指標卡：上排金額、下排比率 ---
-  $('oA').textContent = wan(A);
-  $('oAN').textContent = `${nf0.format(A)} 元`;
-
-  $('oNav').textContent = wan(NAV);
-  $('oNav').className = 'v' + (NAV<=0?' danger':'');
-  $('oNavN').textContent = `資產 ${wan(A)} − 負債 ${wan(DEBT)}`;
-
-  $('oExp').textContent = wan(expAmt);
-  $('oExpN').textContent = `2×正二 + 大盤 = ${nf0.format(expAmt)} 元`;
-
-  $('oE').textContent = solvent ? pct(E) : '∞';
-  $('oE').className = 'v' + (!solvent ? ' danger' : (E>2.5?' warn':''));
-  $('oEN').textContent = solvent
-    ? `${wan(expAmt)} / ${wan(NAV)}　目標 ${pct(Es,0)}，偏離 ${spct(E-Es,1).replace('%',' 點')}`
-    : '淨值為負';
-
-  $('eqN').textContent = wan(NAV);
-  $('eqNS').textContent = `${wan(A)} − ${wan(DEBT)}`;
-  $('eqE').textContent = solvent ? pct(E,0) : '∞';
-  $('eqES').textContent = `${wan(expAmt)} / ${wan(NAV)}`;
+  // --- 淨資產、曝險金額、實質曝險 ---
+  $('fNavX').textContent = `總資產 ${wan(A)}（正二 + 大盤 + 現金）− 負債 ${wan(DEBT)}`;
+  $('fNavV').textContent = wan(NAV);
+  $('fNavV').style.color = NAV<=0 ? 'var(--danger)' : '';
+  $('fExpX').textContent = `${wan(L)} × 2 + ${wan(U)} × 1`;
+  $('fExpV').textContent = wan(expAmt);
+  $('fErrX').textContent = solvent ? `${wan(expAmt)} / ${wan(NAV)}　目標 ${pct(Es,0)}` : '淨值為負';
+  $('fErrV').textContent = solvent ? pct(E) : '∞';
+  $('fErrV').style.color = !solvent ? 'var(--danger)' : (E>2.5 ? 'var(--warn)' : '');
   $('ruinPct').textContent = solvent && E>0 ? (100/E).toFixed(0)+'%' : '—';
-
-  // --- 曝險分解 ---
-  $('decomp').innerHTML=[
-    ['正二', L, 2, '#7c3aed'],
-    ['大盤 ETF', U, 1, '#2563eb'],
-    ['投資現金', C, 0, '#64748b'],
-  ].map(([n,v,w])=>{
-    const ex=v*w;
-    return `<tr><td>${n}</td><td>${money(v)}</td><td>×${w}</td><td>${money(ex)}</td>
-      <td>${solvent?pct(ex/NAV,0):'—'}</td></tr>`;
-  }).join('') +
-  `<tr style="font-weight:650"><td>合計</td><td>${money(A)}</td><td class="flat">—</td><td>${money(expAmt)}</td>
-    <td>${solvent?pct(E,0):'∞'}</td></tr>`;
 
   // --- 風險橫幅 ---
   const risks=[];
@@ -558,16 +520,6 @@ function calc(){
     if(E>2.5) risks.push(['act',`實質曝險 ${pct(E)} 相當高：大盤跌 ${(100/E).toFixed(0)}% 淨值即歸零。`]);
   }
   $('bannerRisk').innerHTML = risks.map(([k,t])=>`<div class="banner ${k}">${t}</div>`).join('');
-
-  // --- 資產負債表 ---
-  $('bs').innerHTML=[
-    ['正二', L], ['大盤 ETF', U], ['投資現金', C], ['總資產', A],
-    ['信貸', -P], ['質押借款', -Q], ['淨值', NAV],
-  ].map(([n,v])=>{
-    const bold=(n==='總資產'||n==='淨值')?'font-weight:650':'';
-    return `<tr><td style="${bold}">${n}</td><td style="${bold}" class="${v<0?'sell':''}">${money(v)}</td>
-      <td>${A>0?pct(v/A,0):'—'}</td><td>${solvent?pct(v/NAV,0):'—'}</td></tr>`;
-  }).join('');
 
   if(!solvent){
     ['trades'].forEach(k=>$(k).innerHTML='');
