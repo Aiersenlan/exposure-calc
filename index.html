@@ -267,9 +267,9 @@ details.gloss[open] summary::before { transform:rotate(90deg); }
 
 <h2>配置 <span style="font-weight:400;color:var(--muted);font-size:11px">Allocation</span></h2>
 <div class="card">
-  <div style="font-size:12px;color:var(--muted)">目前（佔淨值，有負債時總和 &gt; 100%）</div>
+  <div style="font-size:12px;color:var(--muted)">目前（佔總資產，合計 100%）</div>
   <div class="bar" id="barNow"></div>
-  <div style="font-size:12px;color:var(--muted);margin-top:14px">目標</div>
+  <div style="font-size:12px;color:var(--muted);margin-top:14px">目標（佔總資產，合計 100%）</div>
   <div class="bar" id="barTgt"></div>
   <div class="legend"><span><i class="s-l"></i>正二</span><span><i class="s-u"></i>大盤</span><span><i class="s-c"></i>投入現金</span><span><i class="s-r"></i>預留現金</span></div>
 </div>
@@ -572,7 +572,7 @@ function calc(){
   } else cw.hidden=true;
 
   const tL=tl*NAV, tU=tu*NAV;
-  drawBar($('barNow'),l,u,C/NAV,R/NAV); drawBar($('barTgt'),tl,tu,0,R/NAV);
+  drawBar($('barNow'),L/A,U/A,C/A,R/A); drawBar($('barTgt'),tL/A,tU/A,0,R/A);
 
   // --- 交易 ---
   let cost=0;
