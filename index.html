@@ -163,15 +163,16 @@ details.gloss[open] summary::before { transform:rotate(90deg); }
 <h2>範例：小明怎麼填 <span style="font-weight:400;color:var(--muted);font-size:11px">Example</span></h2>
 <div class="card">
   <div class="note" style="margin-top:0">
-    小明有 10 萬現金、20 萬預備金，身上有 15 萬正二與 100 萬 0050。某天他借了信貸 200 萬，把預備金提高到 50 萬，再自備 105 萬，其餘現金全部拿去投資，
+    小明有 10 萬現金（全部拿來投資）、20 萬預備金，身上有 15 萬正二與 100 萬 0050。某天他借了信貸 200 萬，把預備金提高到 50 萬，再自備 105 萬，其餘現金全部拿去投資，
     目標實質曝險拉到 <a href="#lifecycle" style="color:var(--accent)">生命週期投資參考</a>中的 <b>200%</b>。按下按鈕自動帶入：
   </div>
   <div class="tw"><table class="extbl">
     <colgroup><col style="width:40%"><col style="width:24%"><col style="width:12%"><col style="width:24%"></colgroup>
     <thead><tr><th>欄位（萬元）</th><th>① 借款前</th><th></th><th>② 借款後</th></tr></thead>
     <tbody>
-      <tr><td>想投入投資的現金</td><td>10</td><td style="text-align:center;color:var(--accent);font-weight:700">→</td><td>285</td></tr>
       <tr><td>緊急預備金</td><td>20</td><td style="text-align:center;color:var(--accent);font-weight:700">→</td><td>50</td></tr>
+      <tr><td>投入現金</td><td>10</td><td style="text-align:center;color:var(--accent);font-weight:700">→</td><td>285</td></tr>
+      <tr><td>預留現金</td><td>0</td><td style="text-align:center;color:var(--accent);font-weight:700">→</td><td>0</td></tr>
       <tr><td>大盤正二 ETF 市值</td><td>15</td><td style="text-align:center;color:var(--accent);font-weight:700">→</td><td>15</td></tr>
       <tr><td>大盤 ETF（0050）市值</td><td>100</td><td style="text-align:center;color:var(--accent);font-weight:700">→</td><td>100</td></tr>
       <tr><td>信貸餘額</td><td>0</td><td style="text-align:center;color:var(--accent);font-weight:700">→</td><td>200</td></tr>
@@ -183,7 +184,7 @@ details.gloss[open] summary::before { transform:rotate(90deg); }
     </tbody>
 </table></div>
   <div class="note">
-    ② 的現金 285 = 原現金 10 + 借款 200 − 補足預備金 30（20 → 50）+ 自備再投入 105。
+    ② 的投入現金 285 = 原現金 10 + 借款 200 − 補足預備金 30（20 → 50）+ 自備再投入 105。
     ERR 的上限是 2 × 總資產 / 淨資產，所以要達到 ERR* = 200%，總資產不能超過淨資產的 2 倍，
     也就是正二 + 大盤 + 現金 ≥ 400 萬（借款 200 時），小明得再補 105 萬。<br>
     <b>結果</b>：② 的總資產 400 萬、NAV 200 萬，ERR* = 200% 剛好是可達上限。目標配置為全 0050：賣出正二 15 萬、0050 買到 400 萬（買進 300 萬）。
@@ -193,13 +194,14 @@ details.gloss[open] summary::before { transform:rotate(90deg); }
 <h2>資金 <span style="font-weight:400;color:var(--muted);font-size:11px">Funds</span></h2>
 <div class="card">
   <div class="grid g2">
-    <div><label>想投入投資的現金（萬元，含申請中的貸款金額）<br><span style="opacity:.7">Cash to Invest</span></label><input type="text" inputmode="text" autocomplete="off" class="numfield" id="cash" value="120"><div class="unit" id="uC"></div></div>
     <div><label>緊急預備金（萬元）<br><span style="opacity:.7">Emergency Fund</span></label><input type="text" inputmode="text" autocomplete="off" class="numfield" id="emerg" value="30"><div class="unit" id="uEm"></div></div>
   </div>
-  <div class="note">
-    「想投入的現金」視為可投資資產，計入總資產與淨值；申請中的貸款請同時填在下方負債。
-    <b>緊急預備金不投入市場</b>，不計入曝險、淨值與配置計算，只是提醒你先留好。
+  <div class="note" style="margin-top:6px">緊急預備金不參與任何投資計算。</div>
+  <div class="grid g2" style="margin-top:14px">
+    <div><label>投入現金（萬元，含申請中的貸款金額）<br><span style="opacity:.7">Cash to Invest</span></label><input type="text" inputmode="text" autocomplete="off" class="numfield" id="cash" value="120"><div class="unit" id="uC"></div></div>
+    <div><label>預留現金（萬元）<br><span style="opacity:.7">Reserved Cash</span></label><input type="text" inputmode="text" autocomplete="off" class="numfield" id="reserve" value="0"><div class="unit" id="uR"></div></div>
   </div>
+  <div class="note">投入現金買正二或原型；預留現金則不會，但仍會算入資產。申請中的貸款請同時填在下方負債。</div>
 </div>
 
 <h2>目前股票市值 <span style="font-weight:400;color:var(--muted);font-size:11px">Current Stock Value</span></h2>
@@ -233,8 +235,8 @@ details.gloss[open] summary::before { transform:rotate(90deg); }
   </div>
   <div id="clampWarn" class="warnmsg" hidden></div>
   <div class="note">
-    目標以<b>實質曝險 ERR</b> 設定（淨值層級，決定你的實際波動）。現金全數投入，目標配置：正二 <code>= ERR*·NAV − A</code>、大盤 <code>= 2A − ERR*·NAV</code>。
-    可達範圍 <code>A/NAV ≤ ERR* ≤ 2A/NAV</code>。
+    目標以<b>實質曝險 ERR</b> 設定（淨值層級，決定你的實際波動）。投入現金全數買進，目標配置：正二 <code>= ERR*·NAV − I</code>、大盤 <code>= 2I − ERR*·NAV</code>（I = 正二 + 大盤 + 投入現金）。
+    可達範圍 <code>I/NAV ≤ ERR* ≤ 2I/NAV</code>。
   </div>
 </div>
 
@@ -291,7 +293,7 @@ details.gloss[open] summary::before { transform:rotate(90deg); }
   想降低 ERR，可以賣正二換大盤、提高現金，或還款。<br><br>
   <b>本表刻意沒算的事</b>（與曝險比例正交，但真實存在）：質押的維持率與追繳／斷頭；
   信貸的聯徵 DBR 22 倍規範與到期轉貸；利息對淨值的長期侵蝕。<br><br>
-  <b>使用方式</b>：填入想投入的現金、緊急預備金、兩個股票市值與兩筆負債餘額，再設定目標 ERR*。
+  <b>使用方式</b>：填入緊急預備金、投入現金、預留現金、兩個股票市值與兩筆負債餘額，再設定目標 ERR*。
   實際下單時把差額除以現價換算張數，不足一張走零股。
 </div>
 
@@ -306,14 +308,12 @@ details.gloss[open] summary::before { transform:rotate(90deg); }
     <p>追蹤指數「兩倍」漲跌幅的 ETF（例：台灣50正2）。大盤漲跌 1%，它大約漲跌 2%。</p></div>
   <div class="gterm"><span class="zh">大盤 ETF</span> <span class="en">Market / Index ETF</span>
     <p>追蹤大盤指數本身、不放大波動的 ETF（例：0050）。大盤漲跌 1%，它也漲跌約 1%。</p></div>
-  <div class="gterm"><span class="zh">想投入投資的現金</span> <span class="en">Cash to Invest</span> <span class="sym">(C)</span>
-    <p>準備投入市場、但還沒買進的錢（含申請中的貸款），不會因為大盤漲跌而變動。</p></div>
+  <div class="gterm"><span class="zh">投入現金</span> <span class="en">Cash to Invest</span>
+    <p>準備買進正二或大盤 ETF 的錢（含申請中的貸款），會依目標配置分配。</p></div>
+  <div class="gterm"><span class="zh">預留現金</span> <span class="en">Reserved Cash</span>
+    <p>不拿去買股票的現金，不受大盤漲跌影響，但仍算入總資產與淨值。</p></div>
   <div class="gterm"><span class="zh">緊急預備金</span> <span class="en">Emergency Fund</span>
-    <p>留作生活應急、不投入市場的錢，本表不計入任何曝險與淨值。</p></div>
-  <div class="gterm"><span class="zh">信貸</span> <span class="en">Unsecured / Personal Loan</span> <span class="sym">(P)</span>
-    <p>沒有拿股票或 ETF 抵押的貸款，銀行純憑個人信用核貸。</p></div>
-  <div class="gterm"><span class="zh">質押借款</span> <span class="en">Securities-backed / Pledged Loan</span> <span class="sym">(Q)</span>
-    <p>拿手上的股票或 ETF 去抵押借出的錢。<span class="muted">有「維持率」風險（見下）。</span></p></div>
+    <p>留作生活應急，不參與任何投資計算，也不計入總資產與淨值。</p></div>
   <div class="gterm"><span class="zh">總資產</span> <span class="en">Total Assets</span> <span class="sym">(A)</span>
     <p>你名下所有資產市值加總：<code>A = 正二 + 大盤 + 現金</code>。</p></div>
   <div class="gterm"><span class="zh">淨值</span> <span class="en">Net Asset Value</span> <span class="sym">(NAV)</span>
@@ -449,7 +449,7 @@ details.gloss[open] summary::before { transform:rotate(90deg); }
 
 <script>
 const $ = id => document.getElementById(id);
-const IDS = ['cash','emerg','valL','valU','loanP','loanQ','eStar'];
+const IDS = ['emerg','cash','reserve','valL','valU','loanP','loanQ','eStar'];
 const STORAGE_KEY = 'exposureCalc.v1';
 function saveState(){
   const state = {};
@@ -521,20 +521,20 @@ function drawBar(el,l,u){
 
 function calc(){
   // 所有金額輸入皆為萬元，內部一律換算為元計算
-  const L=numOf('valL')*1e4, U=numOf('valU')*1e4, C=numOf('cash')*1e4;
+  const L=numOf('valL')*1e4, U=numOf('valU')*1e4, C=numOf('cash')*1e4, R=numOf('reserve')*1e4;
   const P=numOf('loanP')*1e4, Q=numOf('loanQ')*1e4;
   const Es=numOf('eStar')/100, EM=numOf('emerg')*1e4;
 
-  [['uL',L],['uU',U],['uC',C],['uEm',EM],['uP',P],['uQ',Q]].forEach(([k,v])=>{
+  [['uL',L],['uU',U],['uC',C],['uR',R],['uEm',EM],['uP',P],['uQ',Q]].forEach(([k,v])=>{
     $(k).textContent = `= ${nf0.format(v)} 元`;
   });
 
-  const A=L+U+C, DEBT=P+Q, NAV=A-DEBT;
+  const A=L+U+C+R, DEBT=P+Q, NAV=A-DEBT;
   const expAmt=2*L+U;
   const solvent = NAV>0;
 
   const E = solvent ? expAmt/NAV : Infinity;    // 實質曝險 ERR
-  const k = solvent ? A/NAV : Infinity;         // 總資產 / 淨值（僅用於配置）
+  const k = solvent ? (A-R)/NAV : Infinity;     // 可投資資產 I / 淨值（僅用於配置）
   const l = solvent ? L/NAV : 0, u = solvent ? U/NAV : 0;
 
   // --- 淨資產、曝險金額、實質曝險 ---
@@ -571,8 +571,8 @@ function calc(){
   if(Math.abs(tl-tlRaw)>1e-9){
     cw.hidden=false;
     cw.textContent = Es>2*k
-      ? `⚠ 目前總資產為淨值的 ${k.toFixed(2)} 倍，ERR 可達上限 ${pct(2*k,0)}，無法達到目標 ${pct(Es,0)}。需增加借款或降低目標。`
-      : `⚠ 目前總資產為淨值的 ${k.toFixed(2)} 倍，全數投入下 ERR 至少 ${pct(k,0)}，無法降到目標 ${pct(Es,0)}。已調整為全大盤配置。`;
+      ? `⚠ 目前可投資資產為淨值的 ${k.toFixed(2)} 倍，ERR 可達上限 ${pct(2*k,0)}，無法達到目標 ${pct(Es,0)}。需增加借款或降低目標。`
+      : `⚠ 目前可投資資產為淨值的 ${k.toFixed(2)} 倍，全數投入下 ERR 至少 ${pct(k,0)}，無法降到目標 ${pct(Es,0)}。已調整為全大盤配置。`;
   } else cw.hidden=true;
 
   const tL=tl*NAV, tU=tu*NAV;
@@ -607,8 +607,8 @@ IDS.forEach(id=>{
   el.addEventListener('blur',()=>{ normalizeField(id); saveState(); calc(); });
 });
 const EXAMPLES = [
-  {cash:10, emerg:20, valL:15, valU:100, loanP:0,   loanQ:0, eStar:200},
-  {cash:285,emerg:50, valL:15, valU:100, loanP:200, loanQ:0, eStar:200},
+  {cash:10, reserve:0, emerg:20, valL:15, valU:100, loanP:0,   loanQ:0, eStar:200},
+  {cash:285,reserve:0, emerg:50, valL:15, valU:100, loanP:200, loanQ:0, eStar:200},
 ];
 document.querySelectorAll('.exbtn').forEach(btn=>{
   btn.addEventListener('click',()=>{
